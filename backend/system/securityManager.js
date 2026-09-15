@@ -462,8 +462,22 @@ const SecurityManager = {
     // ======================================================
 
     async resendVerificationCode(email) {
-        return this.sendVerificationCode(email);
-    },
+        let user;
+
+        try {
+            user = await UserService.getUserForEmailVerification(email);
+        } catch (error) {
+            if (error.name === "NotFoundError") {
+                throw new UnauthorizedError(
+                    "Unable to resend verification code."
+                );
+            }
+
+            throw error;
+        }
+
+        return this.sendVerificationCode(user);
+    }
 };
 
 

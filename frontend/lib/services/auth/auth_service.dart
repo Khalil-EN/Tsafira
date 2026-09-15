@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../api_response.dart';
 import '../http_client.dart';
 
@@ -141,10 +139,19 @@ class AuthService {
   // ============================================================
 
   static Future<bool> isAuthenticated() async {
-    final token =
-    await TokenManager.getAccessToken();
+    final refreshToken = await TokenManager.getRefreshToken();
 
-    return token != null && token.isNotEmpty;
+    if (refreshToken == null || refreshToken.isEmpty) {
+      return false;
+    }
+
+    try {
+      await getCurrentUser();
+      return true;
+    } catch (_) {
+      await TokenManager.clearTokens();
+      return false;
+    }
   }
 
   static Future<Map<String, dynamic>> updateProfile(

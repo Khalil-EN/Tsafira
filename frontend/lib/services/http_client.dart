@@ -29,7 +29,6 @@ class HttpClient {
       uri = uri.replace(queryParameters: queryParams);
     }
 
-    // Initial request
     http.Response response = await _execute(
       method: method,
       uri: uri,
@@ -37,8 +36,8 @@ class HttpClient {
       token: accessToken,
     );
 
-    // Handle token expiration — retry once with refreshed token
-    if (response.statusCode == 403 && refreshToken != null) {
+    if (requiresAuth && response.statusCode == 401 &&
+        refreshToken != null && refreshToken.isNotEmpty) {
       final refreshed = await _refreshAccessToken(refreshToken);
       if (!refreshed) {
         throw SessionExpiredException('Session expired. Please log in again.');
@@ -52,7 +51,6 @@ class HttpClient {
       );
     }
 
-    // Handle premium limit
     if (handlePremiumException && response.statusCode == 405) {
       final decoded = jsonDecode(response.body);
       if (decoded['error'] == 'LIMIT_REACHED') {
@@ -60,7 +58,6 @@ class HttpClient {
       }
     }
 
-    // Handle errors
     if (response.statusCode >= 400) {
       throw HttpException(
         statusCode: response.statusCode,
@@ -93,7 +90,6 @@ class HttpClient {
         return await http.put(uri,
             headers: headers,
             body: body != null ? jsonEncode(body) : null);
-    // Fixed: added patch — used by notification mark-read endpoints
       case HttpMethod.patch:
         return await http.patch(uri,
             headers: headers,
@@ -126,7 +122,6 @@ class HttpClient {
   }
 }
 
-/// Token management utilities
 class TokenManager {
   static final FlutterSecureStorage _storage = FlutterSecureStorage();
 
@@ -150,7 +145,6 @@ class TokenManager {
   }
 }
 
-// Fixed: added patch to the enum
 enum HttpMethod { get, post, put, patch, delete }
 
 class HttpException implements Exception {
