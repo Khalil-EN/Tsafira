@@ -576,29 +576,40 @@ class SystemManager {
   async getRequests(userId) { return await RequestService.getRequests(userId); }
 
   async acceptRequest(requestId, actingUserId) {
-    await RequestService.acceptRequest(requestId);
+    const request = await RequestService.acceptRequest(requestId);
 
-    // Fetch the request so we know sender, type, and community for the notification
-    const RequestDAO = require('../dao/requestDAO');
-    const req = await RequestDAO.getRequestById(requestId);
+    const isFriend = request.type === "friend";
 
-    if (req) {
-      const isFriend = req.type === 'friend';
-      await NotificationService.send({
-        recipientId: req.sender._id,
-        type:        isFriend ? 'friend_accepted' : 'community_accepted',
-        title:       isFriend ? 'Friend Request Accepted' : 'Community Request Accepted',
-        body:        isFriend
-          ? 'Your friend request was accepted!'
-          : `You are now a member of ${req.community?.name || 'the community'}.`,
-        refModel:    isFriend ? 'User' : 'Community',
-        refId:       isFriend ? req.recipient._id : req.community?._id,
-      });
-    }
+    await NotificationService.send({
+        recipientId: request.sender._id,
+        type: isFriend
+            ? "friend_accepted"
+            : "community_accepted",
 
-    // Guard: only log if actingUserId is a valid ObjectId string, not a type string like 'friend'
-    if (actingUserId && /^[a-f\d]{24}$/i.test(actingUserId.toString())) {
-      AnalyticsService.log('accept_request', { userId: actingUserId });
+        title: isFriend
+            ? "Friend Request Accepted"
+            : "Community Request Accepted",
+
+        body: isFriend
+            ? "Your friend request was accepted!"
+            : `You are now a member of ${
+                request.community?.name || "the community"
+            }.`,
+
+        refModel: isFriend ? "User" : "Community",
+
+        refId: isFriend
+            ? request.recipient._id
+            : request.community?._id,
+    });
+
+    if (
+        actingUserId &&
+        /^[a-f\d]{24}$/i.test(actingUserId.toString())
+    ) {
+        AnalyticsService.log("accept_request", {
+            userId: actingUserId,
+        });
     }
   }
 

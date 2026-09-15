@@ -14,7 +14,7 @@ const CommunityMembershipPolicy = require(
 );
 
 const RequestDAO = require(
-  "../../../dao/RequestDAO"
+  "../../../dao/requestDAO"
 );
 
 const CommunityDAO = require(

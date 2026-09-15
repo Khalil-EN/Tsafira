@@ -1,6 +1,4 @@
-const RequestDAO =
-  require("../../dao/requestDAO");
-
+const RequestDAO = require("../../dao/requestDAO");
 const RequestHandlerRegistry =
   require(
     "../../domain/request/RequestHandlerRegistry"
@@ -112,31 +110,26 @@ const RequestService = {
   // ==========================================================================
 
   async acceptRequest(requestId) {
-    const request =
-      await RequestDAO.getRequestById(
-        requestId
-      );
+    const request = await RequestDAO.getRequestById(requestId);
 
     if (
-      !request ||
-      request.status !==
-        RequestStatus.PENDING
+        !request ||
+        request.status !== RequestStatus.PENDING
     ) {
-      throw new NotFoundError(
-        "Request not found or already handled"
-      );
+        throw new NotFoundError(
+            "Request not found or already handled"
+        );
     }
 
-    await RequestHandlerRegistry.dispatch(
-      request
-    );
+    await RequestHandlerRegistry.dispatch(request);
 
     await RequestDAO.updateRequestStatus(
-      requestId,
-      RequestStatus.ACCEPTED
+        requestId,
+        RequestStatus.ACCEPTED
     );
-  },
 
+    return request;
+  },
   // ==========================================================================
   // REJECT
   // ==========================================================================

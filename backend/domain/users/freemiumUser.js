@@ -1,5 +1,5 @@
 const BaseUser   = require('./basicUser');
-const DateRange  = require('./DateRange');
+const DateRange  = require('./dateRange');
 const { UserRole } = require('./enums/userEnums');
 
 const MAX_FREE_SUGGESTIONS_PER_DAY = 5;

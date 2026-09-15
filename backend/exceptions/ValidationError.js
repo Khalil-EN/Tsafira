@@ -1,4 +1,4 @@
-const AppError = require('./Apperor');
+const AppError = require('./Apperror');
 
 class ValidationError extends AppError {
   constructor(message = 'Invalid input') {

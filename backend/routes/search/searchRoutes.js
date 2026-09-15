@@ -1,58 +1,55 @@
-const express = require('express');
+const express = require("express");
+
 const router = express.Router();
-const systemManager = require('../system/SystemManager');
-const { authenticateToken, authorizeRoles } = require('../middlewares/authMiddleware');
 
-const auth = [authenticateToken, authorizeRoles('admin', 'premium', 'freemium')];
+const asyncHandler = require("../../middlewares/asyncHandler");
 
+const {
+    authenticateToken,
+} = require("../../middlewares/authMiddleware");
 
-router.post('/users-communities', auth, async (req, res) => {
-  try {
-    const { query, types } = req.body;
-    const userId = req.user.id;
+const SearchController = require("./searchController");
 
-    const results = await systemManager.searchUsersAndCommunities(userId, query, types);
-    res.status(200).json(results);
-  } catch (error) {
-    console.error('Search error:', error);
-    res.status(500).json({ error: 'Search failed' });
-  }
-});
+const {
+    validateUserCommunitySearch,
+    validateSearchFilters,
+} = require("./searchValidator");
 
 
-router.post('/hotels', auth, async (req, res) => {
-  try {
-    const filters = req.body;
-    const results = await systemManager.searchResidences(filters);
-    res.status(200).json(results);
-  } catch (error) {
-    console.error('Search error:', error);
-    res.status(500).json({ error: 'Search failed' });
-  }
-});
+router.use(authenticateToken);
 
 
-router.post('/restaurants', auth, async (req, res) => {
-  try {
-    const filters = req.body;
-    const results = await systemManager.searchRestaurants(filters);
-    res.status(200).json(results);
-  } catch (error) {
-    console.error('Search error:', error);
-    res.status(500).json({ error: 'Search failed' });
-  }
-});
+// POST /search/users-communities
+router.post(
+    "/users-communities",
+    validateUserCommunitySearch,
+    asyncHandler(SearchController.searchUsersAndCommunities)
+);
 
 
-router.post('/activities', auth, async (req, res) => {
-  try {
-    const filters = req.body;
-    const results = await systemManager.searchActivities(filters);
-    res.status(200).json(results);
-  } catch (error) {
-    console.error('Search error:', error);
-    res.status(500).json({ error: 'Search failed' });
-  }
-});
+// POST /search/residences
+router.post(
+    "/residences",
+    validateSearchFilters,
+    asyncHandler(SearchController.searchResidences)
+);
+
+
+// POST /search/restaurants
+router.post(
+    "/restaurants",
+    validateSearchFilters,
+    asyncHandler(SearchController.searchRestaurants)
+);
+
+
+// POST /search/activities
+router.post(
+    "/activities",
+    validateSearchFilters,
+    asyncHandler(SearchController.searchActivities)
+);
+
 
 module.exports = router;
+

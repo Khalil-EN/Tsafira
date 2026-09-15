@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const asyncHandler =
-    require("../../../../middlewares/asyncHandler");
+    require("../../../../../middlewares/asyncHandler");
 
 const socialAuth =
     require("../../../socialAuth");
@@ -27,12 +27,30 @@ router.post(
     )
 );
 
+// POST /comments/:id/like
+router.post(
+    "/:id/like",
+    validateCommentId,
+    asyncHandler(
+        CommentController.likeComment
+    )
+);
+
 // DELETE /comments/:id
 router.delete(
     "/:id",
     validateCommentId,
     asyncHandler(
         CommentController.deleteComment
+    )
+);
+
+// PUT /comments/:id
+router.put(
+    "/:id",
+    validateCommentId,
+    asyncHandler(
+        CommentController.updateComment
     )
 );
 
