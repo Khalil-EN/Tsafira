@@ -1,0 +1,28 @@
+[
+  {
+    "id": "night-001",
+    "name": "Night Market",
+    "description": "Explore the local night market and discover food, crafts and entertainment.",
+    "activityType": "nightlife",
+    "numberOfReviews": 1250,
+    "rating": 4.6,
+    "image": "https://example.com/night-market.jpg",
+    "address": "Rabat, Morocco",
+    "longitude": -8.0089,
+    "latitude": 31.6295,
+    "price": 0
+  },
+  {
+    "id": "night-002",
+    "name": "Evening Cultural Show",
+    "description": "Enjoy a traditional cultural performance during the evening.",
+    "activityType": "culture",
+    "numberOfReviews": 850,
+    "rating": 4.5,
+    "image": "https://example.com/cultural-show.jpg",
+    "address": "Rabat, Morocco",
+    "longitude": -8.002,
+    "latitude": 31.625,
+    "price": 20
+  }
+]

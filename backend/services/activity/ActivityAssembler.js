@@ -19,6 +19,7 @@ class ActivityAssembler {
             location:
                 activity.location ??
                 activity.addresse ??
+                activity.address ??
                 null,
 
             rating:
