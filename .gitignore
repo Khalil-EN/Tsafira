@@ -39,10 +39,13 @@ desktop.ini
 .idea/
 *.iml
 
-# MongoDB / local databases
+# local databases
 *.db
 *.sqlite
 *.sqlite3
+
+# Database test/config files
+backend/testNeon.js
 
 # Uploads / generated files
 uploads/
