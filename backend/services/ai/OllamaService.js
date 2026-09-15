@@ -1,0 +1,119 @@
+const OLLAMA_URL =
+  process.env.OLLAMA_URL ||
+  "http://localhost:11434";
+
+const CHAT_MODEL =
+  process.env.AI_CHAT_MODEL ||
+  "qwen3:1.7b";
+
+const EMBEDDING_MODEL =
+  process.env.AI_EMBEDDING_MODEL ||
+  "qwen3-embedding:0.6b";
+
+
+const OllamaService = {
+
+  async embed(text) {
+
+    const response =
+      await fetch(
+        `${OLLAMA_URL}/api/embed`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            model: EMBEDDING_MODEL,
+            input: text,
+          }),
+        }
+      );
+
+    if (!response.ok) {
+      const error =
+        await response.text();
+
+      throw new Error(
+        `Ollama embedding error: ${error}`
+      );
+    }
+
+    const data =
+      await response.json();
+
+    if (
+      !data.embeddings ||
+      !data.embeddings[0]
+    ) {
+      throw new Error(
+        "Ollama returned no embedding."
+      );
+    }
+
+    return data.embeddings[0];
+  },
+
+
+  async chat({
+    system,
+    messages,
+  }) {
+
+    const response =
+      await fetch(
+        `${OLLAMA_URL}/api/chat`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            model: CHAT_MODEL,
+
+            messages: [
+              {
+                role: "system",
+                content: system,
+              },
+
+              ...messages,
+            ],
+
+            stream: false,
+
+            options: {
+              temperature: 0.2,
+            },
+          }),
+        }
+      );
+
+    if (!response.ok) {
+      const error =
+        await response.text();
+
+      throw new Error(
+        `Ollama chat error: ${error}`
+      );
+    }
+
+    const data =
+      await response.json();
+
+    return (
+      data.message?.content ||
+      ""
+    ).trim();
+  },
+};
+
+
+module.exports =
+  OllamaService;

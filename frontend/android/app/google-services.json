@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1081539218547",
+    "project_id": "tsafira-firebase",
+    "storage_bucket": "tsafira-firebase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081539218547:android:e70f4c00ba8138e961ee06",
+        "android_client_info": {
+          "package_name": "com.example.tsafira"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081539218547-pffe2e16k38271hgkj1ok2liqd7jld2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHYrLhpq794frUHzjZ7MS_et9CmltSVUs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1081539218547-pffe2e16k38271hgkj1ok2liqd7jld2p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1081539218547-tasdvdt68hhp2ovqcjemk23argdq7hnm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tsafira"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
