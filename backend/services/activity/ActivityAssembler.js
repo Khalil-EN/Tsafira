@@ -38,6 +38,7 @@ class ActivityAssembler {
             type:
                 activity.type ??
                 activity.activitytype ??
+                activity.activityType ??
                 null,
         });
     }

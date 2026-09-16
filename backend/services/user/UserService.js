@@ -159,7 +159,7 @@ const UserService = {
     async getUserForAuthenticationById(id) {
 
         const doc =
-            await UserDAO.getUserById(id);
+            await UserDAO.getUserByIdAndRefreshtoken(id);
 
         if (!doc) {
 

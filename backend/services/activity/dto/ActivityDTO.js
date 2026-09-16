@@ -2,7 +2,7 @@ class ActivityDTO {
     constructor({
         id,
         name,
-        address,
+        location,
         rating,
         reviews,
         imageurl,
@@ -10,7 +10,7 @@ class ActivityDTO {
     }) {
         this.id = id;
         this.name = name;
-        this.address = address;
+        this.location = location;
         this.rating = rating;
         this.reviews = reviews;
         this.imageurl = imageurl;

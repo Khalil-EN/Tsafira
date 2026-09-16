@@ -2,13 +2,13 @@ const ItineraryDAO =
     require('../../dao/itineraryDAO');
 
 const ItineraryFactory =
-    require('../../domain/itineraries/ItineraryFactory');
+    require('../../domain/itineraries/models/ItineraryFactory');
 
 const TripPlanningRequest =
     require('../../domain/itineraries/TripPlanningRequest');
 
 const ScoringConfig =
-    require('../../domain/itineraries/ScoringConfig');
+    require('../../domain/itineraries/config/ScoringConfig');
 
 const ItineraryPlannerFactory =
     require('../../domain/itineraries/ItineraryPlannerFactory');

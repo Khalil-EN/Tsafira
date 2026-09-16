@@ -1,8 +1,8 @@
 const Location =
-    require('../locations/Location');
+    require('../../../locations/Location');
 
 const SoftBudgetScore =
-    require('./SoftBudgetScore');
+    require('../budget/SoftBudgetScore');
 
 const BREAKFAST_RADIUS_KM = 10;
 

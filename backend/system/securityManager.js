@@ -153,9 +153,6 @@ const SecurityManager = {
                 }
             );
 
-        console.log(authenticatedUser);
-
-
         // --------------------------------------------------
         // Return authentication response
         // --------------------------------------------------

@@ -1,5 +1,5 @@
 const ItineraryPlanner =
-    require('../itineraries/ItineraryPlanner');
+    require('./planning/ItineraryPlanner');
 
 const InterestBasedScorer =
     require('../activities/strategies/InterestBasedScorer');

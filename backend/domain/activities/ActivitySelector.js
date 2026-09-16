@@ -1,5 +1,5 @@
 const ActivityEligibilityPolicy = require('./ActivityEligibilityPolicy');
-const SoftBudgetScore = require('../itineraries/SoftBudgetScore');
+const SoftBudgetScore = require('../itineraries/budget/SoftBudgetScore');
 
 class ActivitySelector {
     constructor({

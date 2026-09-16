@@ -1,5 +1,5 @@
 const Comment =
-  require("../../../../domain/posts/comment");
+  require("../../../../domain/posts/comments/comment");
 
 const CommentMapper = {
   fromPersistence(doc) {

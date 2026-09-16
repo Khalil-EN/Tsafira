@@ -1,8 +1,8 @@
 const BudgetAllocationPolicy =
-    require('./BudgetAllocationPolicy');
+    require('../budget/BudgetAllocationPolicy');
 
 const MealBudgetPolicy =
-    require('./MealBudgetPolicy');
+    require('../budget/MealBudgetPolicy');
 
 class ScoringConfig {
     constructor({
@@ -87,20 +87,11 @@ class ScoringConfig {
         const days =
             Number(request.days) || 1;
 
-        /*
-         * Global budget allocation.
-         */
         const allocation =
             BudgetAllocationPolicy.allocate(
                 totalBudget
             );
 
-        /*
-         * Food allocation.
-         *
-         * This only handles how the food
-         * budget is distributed between meals.
-         */
         const mealBudgets =
             MealBudgetPolicy.allocate(
                 allocation.food,
@@ -108,11 +99,6 @@ class ScoringConfig {
                 request.meals
             );
 
-        /*
-         * Activity budget is converted
-         * into a daily budget because the
-         * planner selects activities per day.
-         */
         const activityBudgetPerDay =
             days > 0
                 ? allocation.activities /

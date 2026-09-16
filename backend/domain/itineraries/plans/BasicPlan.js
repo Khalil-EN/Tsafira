@@ -1,9 +1,5 @@
-/**
- * Plan — a single day's itinerary block.
- * Replaces BasicPlan + PlanFactory (the factory added no value — it was
- * `return new BasicPlan(data)` with no decision logic).
- */
-class Plan {
+
+class BasicPlan {
   constructor({
     id, itineraryId, title, description, date,
     dayNumber, activities = [], restaurants = [],
@@ -82,4 +78,4 @@ class Plan {
   }
 }
 
-module.exports = Plan;
+module.exports = BasicPlan;
