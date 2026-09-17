@@ -5,13 +5,13 @@ const ItineraryFactory =
     require('../../domain/itineraries/models/ItineraryFactory');
 
 const TripPlanningRequest =
-    require('../../domain/itineraries/TripPlanningRequest');
+    require('../../domain/itineraries/models/TripPlanningRequest');
 
 const ScoringConfig =
     require('../../domain/itineraries/config/ScoringConfig');
 
 const ItineraryPlannerFactory =
-    require('../../domain/itineraries/ItineraryPlannerFactory');
+    require('../../domain/itineraries/planning/ItineraryPlannerFactory');
 
 const ItineraryAssembler =
     require('./ItineraryAssembler');

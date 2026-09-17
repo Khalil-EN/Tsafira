@@ -1,8 +1,8 @@
 const BudgetSummary = require('../budget/BudgetSummary');
 const ActivitySelector = require('../../activities/ActivitySelector');
 const RestaurantAssigner = require('../../restaurants/RestaurantAssigner');
-const BreakfastSelector = require('../BreakfastSelector');
-const DayPlanBuilder = require('../DayPlanBuilder');
+const BreakfastSelector = require('./BreakfastSelector');
+const DayPlanBuilder = require('./DayPlanBuilder');
 
 class ItineraryPlanner {
     constructor({

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:table_calendar_example/providers/user_provider.dart';
+import '../../screens/auth/login_screen.dart';
 import '../../services/api_services.dart';
 import '../common/app_avatar.dart';
 
@@ -379,7 +380,11 @@ class _LogoutButton extends StatelessWidget {
       if (!context.mounted) return;
       context.read<UserProvider>().clearUser();
 
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+            (route) => false,
+      );
     } catch (_) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

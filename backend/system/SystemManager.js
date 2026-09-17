@@ -1,8 +1,3 @@
-/**
- * SystemManager — coordinates between services.
- * Never touches domain objects, DTOs, strategies, or assemblers directly.
- */
-
 const securityManager = require('./securityManager');
 
 const UserService            = require('../services/user/UserService');
@@ -102,6 +97,8 @@ class SystemManager {
     // so nothing is left referencing a user that no longer exists.
     await PostService.deleteUserPosts(userId);
     await CommentService.deleteCommentsByAuthor(user);
+    await PostService.removeLikesByUser(userId);
+    await CommentService.removeLikesByUser(userId);
     await RequestService.deleteRequestsForUser(userId);
     await CommunityMemberService.removeAllMembershipsForUser(userId);
     await CommunityService.handleOwnedCommunitiesBeforeUserDeletion(userId);

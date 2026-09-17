@@ -114,12 +114,12 @@ const PostDAO = {
     ).lean();
   },
 
-  async decrementComments(postId) {
+  async decrementComments(postId, nbrComments) {
     return await PostModel.findByIdAndUpdate(
       postId,
       {
         $inc: {
-          commentsCount: -1,
+          commentsCount: -nbrComments,
         },
       },
       {
@@ -150,6 +150,19 @@ const PostDAO = {
   async deleteManyByAuthor(userId) {
     return await PostModel.deleteMany({ author: userId });
   },
-};
+
+  async removeLikesByUser(userId) {
+    return await PostModel.updateMany(
+      {
+        likes: userId,
+      },
+      {
+        $pull: {
+          likes: userId,
+        },
+      }
+    );
+  },
+  };
 
 module.exports = PostDAO;

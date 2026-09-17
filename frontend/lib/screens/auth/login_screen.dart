@@ -10,10 +10,12 @@ import 'package:table_calendar_example/widgets/auth/social_auth_button.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool showSessionExpired;
+  final bool showAccountCreated;
 
   const LoginScreen({
     super.key,
     this.showSessionExpired = false,
+    this.showAccountCreated = false,
   });
 
   @override
@@ -31,18 +33,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    super.initState();
-    if (widget.showSessionExpired) {
+      super.initState();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Session expired. Please log in again.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        if (widget.showAccountCreated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Account created successfully. Please log in to continue.',
+              ),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 4),
+            ),
+          );
+        } else if (widget.showSessionExpired) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Session expired. Please log in again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       });
-    }
   }
 
   @override

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import '../../models/residence.dart';
 import 'residence_details.dart';
 import 'search_residence.dart';
 import '../../services/api_services.dart';
 import '../../exceptions/session_expired_exception.dart';
 import '../auth/login_screen.dart';
+
 
 class ResidencesPage extends StatefulWidget {
   final bool isFromSearch;
@@ -43,8 +46,12 @@ class _ResidencesPageState extends State<ResidencesPage> {
       List<Map<String, dynamic>> rawData;
       if (widget.isFromSearch) {
         final pdata = {
-          'checkInDate': widget.checkInDate,
-          'checkOutDate': widget.checkOutDate,
+          'checkInDate': widget.checkInDate != null
+              ? DateFormat('yyyy-MM-dd').format(widget.checkInDate!)
+              : null,
+          'checkOutDate': widget.checkOutDate != null
+              ? DateFormat('yyyy-MM-dd').format(widget.checkOutDate!)
+              : null,
           'minPrice': widget.minPrice,
           'maxPrice': widget.maxPrice,
           'location': widget.location,

@@ -139,24 +139,21 @@ const CommentService = {
       );
     }
 
+    const replies =
+      await CommentDAO.getReplies(commentId);
+
     await CommentDAO.deleteComment(commentId);
 
-    if (comment.parentComment) {
-      await CommentDAO.decrementReplies(
-        comment.parentComment
+    if (replies.length > 0) {
+      await CommentDAO.deleteManyByIds(
+        replies.map((reply) => reply._id)
       );
     }
 
     await PostDAO.decrementComments(
-      comment.post
+      comment.post,
+      1 + replies.length
     );
-  },
-
-    async deleteCommentsByPostIds(postIds) {
-    if (!postIds || !postIds.length) return;
-
-
-    await CommentDAO.deleteManyByPostIds(postIds);
   },
 
   async deleteCommentsByAuthor(user) {
@@ -169,6 +166,10 @@ const CommentService = {
         doc._id.toString()
       );
     }
+  },
+
+  async removeLikesByUser(userId) {
+    await CommentDAO.removeLikesByUser(userId);
   },
 
   async _getCommentDomainById(commentId) {

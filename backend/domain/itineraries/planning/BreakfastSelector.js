@@ -1,5 +1,5 @@
 const Location =
-    require('../../../locations/Location');
+    require('../../locations/location');
 
 const SoftBudgetScore =
     require('../budget/SoftBudgetScore');

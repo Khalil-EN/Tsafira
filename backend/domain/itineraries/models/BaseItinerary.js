@@ -1,4 +1,4 @@
-const { GroupType } = require('./enums/itineraryEnums');
+const { GroupType } = require('../enums/itineraryEnums');
 
 class BaseItinerary {
   constructor({

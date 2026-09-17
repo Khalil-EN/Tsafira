@@ -1,26 +1,26 @@
 const ItineraryPlanner =
-    require('./planning/ItineraryPlanner');
+    require('./ItineraryPlanner');
 
 const InterestBasedScorer =
-    require('../activities/strategies/InterestBasedScorer');
+    require('../../activities/strategies/InterestBasedScorer');
 
 const ProximityGrouper =
-    require('../activities/strategies/ProximityGrouper');
+    require('../../activities/strategies/ProximityGrouper');
 
 const NearActivityScorer =
-    require('../restaurants/strategies/NearActivityScorer');
+    require('../../restaurants/strategies/NearActivityScorer');
 
 const NearResidenceScorer =
-    require('../restaurants/strategies/NearResidenceScorer');
+    require('../../restaurants/strategies/NearResidenceScorer');
 
 const WeightedResidenceScorer =
-    require('../residences/strategies/WeightedResidenceScorer');
+    require('../../residences/strategies/WeightedResidenceScorer');
 
 const ActivityEligibilityPolicy =
-    require('../activities/ActivityEligibilityPolicy');
+    require('../../activities/ActivityEligibilityPolicy');
 
 const RestaurantEligibilityPolicy =
-    require('../restaurants/RestaurantEligibilityPolicy');
+    require('../../restaurants/RestaurantEligibilityPolicy');
 
 const ItineraryPlannerFactory = {
     create(request, config) {

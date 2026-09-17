@@ -202,6 +202,10 @@ const PostService = {
     await PostDAO.deleteManyByAuthor(userId);
   },
 
+  async removeLikesByUser(userId) {
+    await PostDAO.removeLikesByUser(userId);
+  },
+
   // ============================================================
   // AUTHORIZATION
   // ============================================================

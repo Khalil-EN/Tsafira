@@ -1,6 +1,6 @@
 const {
     GroupType,
-} = require('./enums/ItineraryEnums');
+} = require('../enums/itineraryEnums');
 
 class TripPlanningRequest {
     constructor({

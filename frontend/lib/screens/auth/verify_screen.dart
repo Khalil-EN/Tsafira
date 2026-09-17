@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 
 import 'package:table_calendar_example/services/api_services.dart';
 
+import 'login_screen.dart';
+
 class VerifyScreen extends StatefulWidget {
   final String email;
 
@@ -151,10 +153,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
       if (!mounted) return;
 
-      Navigator.pushNamedAndRemoveUntil(
+      Navigator.pushReplacement(
         context,
-        '/home',
-            (_) => false,
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(showAccountCreated: true,),
+        ),
       );
     } catch (error) {
       if (!mounted) return;

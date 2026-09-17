@@ -182,84 +182,96 @@ const SecurityManager = {
     // ======================================================
 
     async refreshToken(refreshToken) {
+    console.log("========== REFRESH DEBUG ==========");
+    console.log("Refresh token received:", !!refreshToken);
+    console.log(
+        "Refresh token length:",
+        refreshToken ? refreshToken.length : null
+    );
 
-        let decoded;
+    let decoded;
 
-        try {
+    // 1. Verify refresh JWT
+    try {
+        decoded = JwtProvider.verifyRefreshToken(refreshToken);
 
-            decoded =
-                JwtProvider.verifyRefreshToken(
-                    refreshToken
-                );
+        console.log("1. Refresh JWT is valid");
+        console.log("Decoded ID:", decoded.id);
+        console.log("Expiration:", decoded.exp);
+    } catch (error) {
+        console.error("1. REFRESH JWT VERIFICATION FAILED");
+        console.error(error);
 
-        } catch {
+        throw new UnauthorizedError(
+            "Invalid or expired refresh token."
+        );
+    }
 
-            throw new UnauthorizedError(
-                "Invalid or expired refresh token."
-            );
-        }
+    // 2. Find user
+    let user;
 
+    try {
+        user = await UserService.getUserForAuthenticationById(
+            decoded.id
+        );
 
-        let user;
+        console.log("2. User found:", !!user);
+        console.log("User ID:", user?.id);
+        console.log(
+            "Stored refresh token exists:",
+            !!user?.refreshToken
+        );
+    } catch (error) {
+        console.error("2. USER LOOKUP FAILED");
+        console.error(error);
 
-        try {
+        throw new UnauthorizedError(
+            "Invalid refresh token."
+        );
+    }
 
-            user =
-                await UserService
-                    .getUserForAuthenticationById(
-                        decoded.id
-                    );
+    // 3. Check stored refresh token
+    if (!user.refreshToken) {
+        console.error("3. USER HAS NO STORED REFRESH TOKEN");
 
-        } catch {
+        throw new UnauthorizedError(
+            "Invalid refresh token."
+        );
+    }
 
-            throw new UnauthorizedError(
-                "Invalid refresh token."
-            );
-        }
+    // 4. Compare tokens
+    try {
+        const matches = await PasswordEncoder.matches(
+            refreshToken,
+            user.refreshToken
+        );
 
-
-        // --------------------------------------------------
-        // User must have a stored refresh token
-        // --------------------------------------------------
-
-        if (!user.refreshToken) {
-
-            throw new UnauthorizedError(
-                "Invalid refresh token."
-            );
-        }
-
-
-        // --------------------------------------------------
-        // Compare supplied refresh token with stored hash
-        // --------------------------------------------------
-
-        const matches =
-            await PasswordEncoder.matches(
-                refreshToken,
-                user.refreshToken
-            );
+        console.log("4. Refresh token matches:", matches);
 
         if (!matches) {
+            console.error("4. REFRESH TOKEN DOES NOT MATCH HASH");
 
             throw new UnauthorizedError(
                 "Invalid refresh token."
             );
         }
+    } catch (error) {
+        console.error("4. TOKEN COMPARISON FAILED");
+        console.error(error);
+        throw error;
+    }
 
+    // 5. Generate new access token
+    const accessToken =
+        JwtProvider.generateAccessToken(user);
 
-        // --------------------------------------------------
-        // Generate new access token
-        // --------------------------------------------------
+    console.log("5. NEW ACCESS TOKEN GENERATED");
+    console.log("===================================");
 
-        return {
-            accessToken:
-                JwtProvider.generateAccessToken(
-                    user
-                ),
-        };
-    },
-
+    return {
+        accessToken,
+    };
+},
 
     // ======================================================
     // LOGOUT

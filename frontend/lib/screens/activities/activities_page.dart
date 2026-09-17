@@ -1,6 +1,5 @@
-// lib/screens/activities/activities_page.dart
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/activity.dart';
 import '../../exceptions/session_expired_exception.dart';
@@ -54,8 +53,15 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
 
       if (widget.isFromSearch) {
         final searchData = {
-          'date': widget.date,
-          'time': widget.time,
+          'date': widget.date != null
+              ? DateFormat('yyyy-MM-dd').format(widget.date!)
+              : null,
+
+          'time': widget.time != null
+              ? '${widget.time!.hour.toString().padLeft(2, '0')}:'
+              '${widget.time!.minute.toString().padLeft(2, '0')}'
+              : null,
+
           'freeOnly': widget.freeOnly,
           'location': widget.location,
           'activityTypes': widget.activityTypes,
@@ -63,6 +69,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
           'ageGroups': widget.ageGroups,
           'participants': widget.participants,
         };
+
         loadedData = await SearchService.searchActivities(searchData);
       } else {
         loadedData = await ActivityService.getAll();
@@ -80,7 +87,9 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const LoginScreen(showSessionExpired: true),
+          builder: (context) => const LoginScreen(
+            showSessionExpired: true,
+          ),
         ),
       );
     } catch (e) {

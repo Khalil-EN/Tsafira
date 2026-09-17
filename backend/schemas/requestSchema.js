@@ -96,36 +96,27 @@ const requestSchema =
 //   community = Community
 // ============================================================================
 
-requestSchema.pre(
-  "validate",
-  function (next) {
-    if (this.type === "friend") {
-      if (!this.recipient) {
-        return next(
-          new Error(
-            "A friend request requires a recipient."
-          )
-        );
-      }
-
-      this.community = null;
+requestSchema.pre("validate", function () {
+  if (this.type === "friend") {
+    if (!this.recipient) {
+      throw new Error(
+        "A friend request requires a recipient."
+      );
     }
 
-    if (this.type === "community") {
-      if (!this.community) {
-        return next(
-          new Error(
-            "A community request requires a community."
-          )
-        );
-      }
-
-      this.recipient = null;
-    }
-
-    next();
+    this.community = null;
   }
-);
+
+  if (this.type === "community") {
+    if (!this.community) {
+      throw new Error(
+        "A community request requires a community."
+      );
+    }
+
+    this.recipient = null;
+  }
+});
 
 // ============================================================================
 // INDEXES

@@ -141,10 +141,24 @@ const CommentDAO = {
       .lean();
   },
 
-    async deleteManyByPostIds(postIds) {
-    return await CommentModel.deleteMany({
-      post: { $in: postIds },
-    });
+  async getReplies(parentCommentId) {
+    return await CommentModel.find({
+      parentComment: parentCommentId,
+      isDeleted: false,
+    })
+      .select("_id")
+      .lean();
+  },
+
+  async deleteManyByIds(commentIds) {
+    return await CommentModel.updateMany(
+      {
+        _id: { $in: commentIds },
+      },
+      {
+        isDeleted: true,
+      }
+    );
   },
 
   async getCommentsByAuthor(userId) {
@@ -152,6 +166,35 @@ const CommentDAO = {
       author: userId,
       isDeleted: false,
     }).lean();
+  },
+
+  async deleteCommentAndReplies(commentId) {
+    const result = await CommentModel.updateMany(
+      {
+        $or: [
+          { _id: commentId },
+          { parentComment: commentId },
+        ],
+      },
+      {
+        isDeleted: true,
+      }
+    );
+
+    return result;
+  },
+
+  async removeLikesByUser(userId) {
+    return await CommentModel.updateMany(
+      {
+        likes: userId,
+      },
+      {
+        $pull: {
+          likes: userId,
+        },
+      }
+    );
   },
 };
 
