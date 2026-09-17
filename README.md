@@ -1180,7 +1180,7 @@ Current development areas include:
 ---
 
 
-# Future Development
+# Future Improvements
 
 Tsafira can be extended significantly in future versions. The following features are not part of the current implementation but represent possible directions for the continued development of the application.
 
