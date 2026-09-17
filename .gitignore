@@ -66,3 +66,6 @@ service_account.json
 
 # Scrappers
 /backend/scrappers/
+
+# Test scripts
+backend/scripts/testClassifierModel.js

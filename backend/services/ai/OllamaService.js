@@ -4,7 +4,7 @@ const OLLAMA_URL =
 
 const CHAT_MODEL =
   process.env.AI_CHAT_MODEL ||
-  "qwen3:1.7b";
+  "qwen2.5:3b";
 
 const EMBEDDING_MODEL =
   process.env.AI_EMBEDDING_MODEL ||
@@ -33,7 +33,9 @@ const OllamaService = {
         }
       );
 
+
     if (!response.ok) {
+
       const error =
         await response.text();
 
@@ -42,26 +44,37 @@ const OllamaService = {
       );
     }
 
+
     const data =
       await response.json();
+
 
     if (
       !data.embeddings ||
       !data.embeddings[0]
     ) {
+
       throw new Error(
         "Ollama returned no embedding."
       );
     }
 
+
     return data.embeddings[0];
   },
 
 
-  async chat({
+ async chat({
     system,
     messages,
+    model,
+    options,
+    format,
   }) {
+
+    const selectedModel =
+      model || CHAT_MODEL;
+
 
     const response =
       await fetch(
@@ -70,12 +83,13 @@ const OllamaService = {
           method: "POST",
 
           headers: {
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
 
           body: JSON.stringify({
-            model: CHAT_MODEL,
+
+            model:
+              selectedModel,
 
             messages: [
               {
@@ -88,14 +102,22 @@ const OllamaService = {
 
             stream: false,
 
-            options: {
-              temperature: 0.2,
-            },
+            options:
+              options || {
+                temperature: 0.2,
+              },
+
+            ...(format
+              ? { format }
+              : {}),
+
           }),
         }
       );
 
+
     if (!response.ok) {
+
       const error =
         await response.text();
 
@@ -104,14 +126,16 @@ const OllamaService = {
       );
     }
 
+
     const data =
       await response.json();
+
 
     return (
       data.message?.content ||
       ""
     ).trim();
-  },
+  }
 };
 
 
