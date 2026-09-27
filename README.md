@@ -1179,6 +1179,9 @@ Flutter will build and deploy the application directly to the connected Android 
 
 For wireless debugging, make sure that the computer and Android device are connected to the same network !!
 
+> **Note:** Before running the Flutter application, make sure that the IP address of the machine running the backend server is correctly configured in `/lib/services/http_client.dart`. Update the server IP address there according to your local network configuration.
+
+
 ---
 
 # Development
