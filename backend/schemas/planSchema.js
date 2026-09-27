@@ -6,13 +6,8 @@ const planSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
 
-  
   activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
 
-  // Transportation method
-  //transportation: { type: String },
-
-  
   meals: [
     {
       type: { type: String, enum: ['breakfast', 'lunch', 'dinner'], required: true },

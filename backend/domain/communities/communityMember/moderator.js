@@ -16,8 +16,6 @@ class Moderator extends CommunityMember {
   canBanMembers() {
     return this.isActive();
   }
-
-  // Moderators can delete posts/comments but not edit community settings
 }
 
 module.exports = Moderator;

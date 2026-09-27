@@ -18,32 +18,24 @@ const {
 
 router.use(authenticateToken);
 
-
-// POST /search/users-communities
 router.post(
     "/users-communities",
     validateUserCommunitySearch,
     asyncHandler(SearchController.searchUsersAndCommunities)
 );
 
-
-// POST /search/residences
 router.post(
     "/residences",
     validateSearchFilters,
     asyncHandler(SearchController.searchResidences)
 );
 
-
-// POST /search/restaurants
 router.post(
     "/restaurants",
     validateSearchFilters,
     asyncHandler(SearchController.searchRestaurants)
 );
 
-
-// POST /search/activities
 router.post(
     "/activities",
     validateSearchFilters,

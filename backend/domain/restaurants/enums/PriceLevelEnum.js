@@ -12,16 +12,11 @@ const PriceLevelEnum = Object.freeze({
     LUXURY: '$$$$',
 
     toNumeric(priceLevel) {
-        if (
-            !priceLevel ||
-            typeof priceLevel !== 'string'
-        ) {
+        if (!priceLevel || typeof priceLevel !== 'string') {
             return null;
         }
 
-        const parts = priceLevel
-            .replace(/\s+/g, '')
-            .split('-');
+        const parts = priceLevel.replace(/\s+/g, '').split('-');
 
         const values = parts.map(part => {
             const tier = TIERS.find(
@@ -54,18 +49,12 @@ const PriceLevelEnum = Object.freeze({
                 return TIERS[0].label;
             }
 
-            if (
-                numericPrice >=
-                TIERS[TIERS.length - 1].value
-            ) {
+            if (numericPrice >= TIERS[TIERS.length - 1].value) {
                 return TIERS[TIERS.length - 1].label;
             }
 
             for (let i = 0; i < TIERS.length - 1; i++) {
-                if (
-                    numericPrice >= TIERS[i].value &&
-                    numericPrice < TIERS[i + 1].value
-                ) {
+                if (numericPrice >= TIERS[i].value && numericPrice < TIERS[i + 1].value) {
                     return TIERS[i].label;
                 }
             }
@@ -88,9 +77,7 @@ const PriceLevelEnum = Object.freeze({
             return lo;
         }
 
-        return lo === hi
-            ? lo
-            : `${lo}-${hi}`;
+        return lo === hi ? lo : `${lo}-${hi}`;
     },
 });
 

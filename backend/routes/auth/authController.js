@@ -2,9 +2,6 @@ const systemManager = require("../../system/SystemManager");
 
 const AuthController = {
 
-    // ======================================================
-    // REGISTER
-    // ======================================================
 
     async register(req, res) {
         const {
@@ -35,13 +32,7 @@ const AuthController = {
         });
     },
 
-    // ======================================================
-    // LOGIN
-    // ======================================================
-
     async login(req, res) {
-
-        console.log(req.body);
 
         const {
             email,
@@ -70,17 +61,10 @@ const AuthController = {
         });
     },
 
-    // ======================================================
-    // REFRESH TOKEN
-    // ======================================================
-
     async refresh(req, res) {
         const { refreshToken } = req.body;
 
-        const token =
-            await systemManager.refreshToken(
-                refreshToken
-            );
+        const token = await systemManager.refreshToken(refreshToken);
 
         return res.status(200).json({
             success: true,
@@ -88,16 +72,10 @@ const AuthController = {
         });
     },
 
-    // ======================================================
-    // LOGOUT
-    // ======================================================
-
     async logout(req, res) {
         const { refreshToken } = req.body;
 
-        await systemManager.logoutUser(
-            refreshToken
-        );
+        await systemManager.logoutUser(refreshToken);
 
         return res.status(200).json({
             success: true,
@@ -106,10 +84,6 @@ const AuthController = {
             },
         });
     },
-
-    // ======================================================
-    // SEND VERIFICATION CODE
-    // ======================================================
 
     async sendVerificationCode(req, res) {
         const { email } = req.body;
@@ -124,20 +98,10 @@ const AuthController = {
         });
     },
 
-    // ======================================================
-    // VERIFY EMAIL
-    // ======================================================
-
     async verifyEmail(req, res) {
-        const {
-            email,
-            code,
-        } = req.body;
+        const {email,code} = req.body;
 
-        await systemManager.verifyEmail(
-            email,
-            code
-        );
+        await systemManager.verifyEmail(email,code);
 
         return res.status(200).json({
             success: true,
@@ -146,10 +110,6 @@ const AuthController = {
             },
         });
     },
-
-    // ======================================================
-    // RESEND VERIFICATION CODE
-    // ======================================================
 
     async resendVerificationCode(req, res) {
         const { email } = req.body;
@@ -164,19 +124,9 @@ const AuthController = {
         });
     },
 
-    // ======================================================
-    // CURRENT USER
-    // ======================================================
-
     async getCurrentUser(req, res) {
 
-        console.log(req.user);
-        const user =
-            await systemManager.getCurrentUser(
-                req.user.id
-            );
-        
-        console.log(user);
+        const user = await systemManager.getCurrentUser(req.user.id);
 
         return res.status(200).json({
             success: true,

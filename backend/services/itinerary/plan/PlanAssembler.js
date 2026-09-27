@@ -6,9 +6,7 @@ const PlanAssembler = {
   },
 
   toDTOList(plans) {
-    return plans.map(plan =>
-      PlanAssembler.toDTO(plan)
-    );
+    return plans.map(plan => PlanAssembler.toDTO(plan));
   },
 };
 

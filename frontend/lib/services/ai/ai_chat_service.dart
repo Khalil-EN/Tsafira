@@ -2,9 +2,6 @@ import '../api_response.dart';
 import '../http_client.dart';
 
 class AIChatService {
-  // ============================================================
-  // Get or create the user's AI conversation
-  // ============================================================
 
   static Future<Map<String, dynamic>>
   getOrCreateConversation() async {
@@ -17,10 +14,6 @@ class AIChatService {
       response.body,
     );
   }
-
-  // ============================================================
-  // Send a message to the AI
-  // ============================================================
 
   static Future<Map<String, dynamic>>
   sendMessage({

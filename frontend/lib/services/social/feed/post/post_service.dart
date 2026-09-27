@@ -2,9 +2,6 @@ import '../../../api_response.dart';
 import '../../../http_client.dart';
 
 class PostService {
-  // ============================================================
-  // CREATE
-  // ============================================================
 
   static Future<Map<String, dynamic>> create(
       Map<String, dynamic> postData,
@@ -37,10 +34,6 @@ class PostService {
         .toList();
   }
 
-  // ============================================================
-  // GET POST
-  // ============================================================
-
   static Future<Map<String, dynamic>> getById(
       String postId,
       ) async {
@@ -52,10 +45,6 @@ class PostService {
     return ApiResponse.decodeMap(response.body);
   }
 
-  // ============================================================
-  // LIKE
-  // ============================================================
-
   static Future<Map<String, dynamic>> like(
       String postId,
       ) async {
@@ -66,10 +55,6 @@ class PostService {
 
     return ApiResponse.decodeMap(response.body);
   }
-
-  // ============================================================
-  // DELETE
-  // ============================================================
 
   static Future<Map<String, dynamic>> update(
       String postId,

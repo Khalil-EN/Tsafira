@@ -2,11 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 
-const RestaurantController =
-    require("./restaurantController");
+const RestaurantController = require("./restaurantController");
 
-const asyncHandler =
-    require("../../middlewares/asyncHandler");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 const {
     authenticateToken,
@@ -17,10 +15,6 @@ const auth = [
     authenticateToken,
     authorizeRoles("admin", "premium", "freemium"),
 ];
-
-// ======================================================
-// GET ALL RESTAURANTS
-// ======================================================
 
 router.get(
     "/",

@@ -2,9 +2,6 @@ import '../api_response.dart';
 import '../http_client.dart';
 
 class AuthService {
-  // ============================================================
-  // LOGIN
-  // ============================================================
 
   static Future<void> login(
       Map<String, dynamic> credentials,
@@ -48,10 +45,6 @@ class AuthService {
     return getCurrentUser();
   }
 
-  // ============================================================
-  // REGISTER
-  // ============================================================
-
   static Future<void> register(
       Map<String, dynamic> userData,
       ) async {
@@ -62,10 +55,6 @@ class AuthService {
       requiresAuth: false,
     );
   }
-
-  // ============================================================
-  // VERIFY EMAIL
-  // ============================================================
 
   static Future<void> verifyEmail(
       String email,
@@ -82,9 +71,6 @@ class AuthService {
     );
   }
 
-  // ============================================================
-  // RESEND VERIFICATION CODE
-  // ============================================================
 
   static Future<void> resendVerificationCode(
       String email,
@@ -98,10 +84,6 @@ class AuthService {
       requiresAuth: false,
     );
   }
-
-  // ============================================================
-  // LOGOUT
-  // ============================================================
 
   static Future<void> logout() async {
     final refreshToken =
@@ -121,10 +103,6 @@ class AuthService {
     }
   }
 
-  // ============================================================
-  // CURRENT USER
-  // ============================================================
-
   static Future<Map<String, dynamic>> getCurrentUser() async {
     final response = await HttpClient.request(
       method: HttpMethod.get,
@@ -133,10 +111,6 @@ class AuthService {
 
     return ApiResponse.decodeMap(response.body);
   }
-
-  // ============================================================
-  // AUTHENTICATION STATE
-  // ============================================================
 
   static Future<bool> isAuthenticated() async {
     final refreshToken = await TokenManager.getRefreshToken();

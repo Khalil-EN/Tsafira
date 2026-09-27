@@ -76,17 +76,11 @@ class BudgetSummary {
             return 0;
         }
 
-        return (
-            this.allocated[category] -
-            this.spent[category]
-        );
+        return (this.allocated[category] - this.spent[category]);
     }
 
     getOverBudgetAmount() {
-        return Math.max(
-            0,
-            this.getTotalSpent() - this.totalBudget
-        );
+        return Math.max(0, this.getTotalSpent() - this.totalBudget);
     }
 
     getCategoryOverBudget(category) {
@@ -94,11 +88,7 @@ class BudgetSummary {
             return 0;
         }
 
-        return Math.max(
-            0,
-            this.spent[category] -
-            this.allocated[category]
-        );
+        return Math.max(0, this.spent[category] - this.allocated[category]);
     }
 
     isWithinBudget() {
@@ -123,8 +113,7 @@ class BudgetSummary {
             );
         }
 
-        const foodOver =
-            this.getCategoryOverBudget('food');
+        const foodOver = this.getCategoryOverBudget('food');
 
         if (foodOver > 0) {
             this.addWarning(
@@ -132,8 +121,7 @@ class BudgetSummary {
             );
         }
 
-        const activitiesOver =
-            this.getCategoryOverBudget('activities');
+        const activitiesOver = this.getCategoryOverBudget('activities');
 
         if (activitiesOver > 0) {
             this.addWarning(
@@ -141,8 +129,7 @@ class BudgetSummary {
             );
         }
 
-        const transportOver =
-            this.getCategoryOverBudget('transport');
+        const transportOver = this.getCategoryOverBudget('transport');
 
         if (transportOver > 0) {
             this.addWarning(

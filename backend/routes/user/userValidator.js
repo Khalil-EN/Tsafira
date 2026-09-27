@@ -15,8 +15,6 @@ function validateUpdateProfile(req, res, next) {
         key => !ALLOWED_PROFILE_FIELDS.includes(key)
     );
 
-    console.log(hasDisallowedField);
-
     if (hasDisallowedField) {
         throw new ValidationError(
             "Only profile fields can be updated here."

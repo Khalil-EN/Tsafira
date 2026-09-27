@@ -2,8 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const asyncHandler =
-    require("../../middlewares/asyncHandler");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 const {
     authenticateToken,
@@ -29,11 +28,6 @@ const auth = [
     ),
 ];
 
-
-// ======================================================
-// NOTIFICATIONS
-// ======================================================
-
 router.get(
     "/",
     ...auth,
@@ -42,11 +36,6 @@ router.get(
         NotificationController.getNotifications
     )
 );
-
-
-// ======================================================
-// MARK ONE AS READ
-// ======================================================
 
 router.patch(
     "/:id/read",
@@ -58,10 +47,6 @@ router.patch(
 );
 
 
-// ======================================================
-// MARK ALL AS READ
-// ======================================================
-
 router.patch(
     "/read-all",
     ...auth,
@@ -69,11 +54,6 @@ router.patch(
         NotificationController.markAllAsRead
     )
 );
-
-
-// ======================================================
-// FCM TOKEN
-// ======================================================
 
 router.post(
     "/fcm-token",

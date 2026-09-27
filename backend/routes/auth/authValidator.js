@@ -1,10 +1,6 @@
-const {
-    ValidationError,
-} = require("../../exceptions");
+const { ValidationError } = require("../../exceptions");
 
-const {
-    AVATAR_OPTIONS,
-} = require("../../domain/users/avatarOptions");
+const { AVATAR_OPTIONS } = require("../../domain/users/avatarOptions");
 
 function validateRegister(req, res, next) {
     const {
@@ -17,23 +13,13 @@ function validateRegister(req, res, next) {
         profilePicture,
     } = req.body;
 
-    if (
-        !firstName ||
-        !lastName ||
-        !email ||
-        !birthDate ||
-        !password
-    ) {
+    if (!firstName || !lastName || !email || !birthDate || !password) {
         throw new ValidationError(
             "All registration fields are required."
         );
     }
 
-    console.log(profilePicture);
-
-    if (
-        profilePicture &&
-        !AVATAR_OPTIONS.includes(profilePicture)
+    if (profilePicture && !AVATAR_OPTIONS.includes(profilePicture)
     ) {
         throw new ValidationError(
             "Invalid profile picture."
@@ -44,10 +30,7 @@ function validateRegister(req, res, next) {
 }
 
 function validateLogin(req, res, next) {
-    const {
-        email,
-        password,
-    } = req.body;
+    const {email,password} = req.body;
 
     if (!email || !password) {
         throw new ValidationError(
@@ -82,10 +65,6 @@ function validateLogout(req, res, next) {
     next();
 }
 
-// ======================================================
-// SEND VERIFICATION CODE
-// ======================================================
-
 function validateSendVerificationCode(req, res, next) {
     const { email } = req.body;
 
@@ -98,15 +77,8 @@ function validateSendVerificationCode(req, res, next) {
     next();
 }
 
-// ======================================================
-// VERIFY EMAIL
-// ======================================================
-
 function validateVerifyEmail(req, res, next) {
-    const {
-        email,
-        code,
-    } = req.body;
+    const {email, code} = req.body;
 
     if (!email || !code) {
         throw new ValidationError(
@@ -122,10 +94,6 @@ function validateVerifyEmail(req, res, next) {
 
     next();
 }
-
-// ======================================================
-// RESEND VERIFICATION CODE
-// ======================================================
 
 function validateResendVerificationCode(req, res, next) {
     const { email } = req.body;

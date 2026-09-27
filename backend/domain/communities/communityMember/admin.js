@@ -24,8 +24,6 @@ class Admin extends CommunityMember {
   canBanMembers() {
     return this.isActive();
   }
-
-  // Admins can do everything except delete the community (only owner can)
 }
 
 module.exports = Admin;

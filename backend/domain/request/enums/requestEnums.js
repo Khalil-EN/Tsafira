@@ -1,6 +1,3 @@
-/**
- * Request domain enumerations.
- */
 
 const RequestType = Object.freeze({
   FRIEND:    'friend',

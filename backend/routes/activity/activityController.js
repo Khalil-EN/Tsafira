@@ -1,12 +1,10 @@
-const systemManager =
-    require("../../system/SystemManager");
+const systemManager = require("../../system/SystemManager");
 
 const ActivityController = {
 
     async getAll(req, res) {
 
-        const activities =
-            await systemManager.getAllActivities();
+        const activities = await systemManager.getAllActivities();
 
         return res.status(200).json({
             success: true,

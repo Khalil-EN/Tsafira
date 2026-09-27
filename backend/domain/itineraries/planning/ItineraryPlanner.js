@@ -26,23 +26,19 @@ class ItineraryPlanner {
     } = {}) {
         this.activityScorer = activityScorer;
         this.activityGrouper = activityGrouper;
-        this.activityEligibilityPolicy =
-            activityEligibilityPolicy;
+        this.activityEligibilityPolicy = activityEligibilityPolicy;
 
         this.restaurantScorer = restaurantScorer;
-        this.restaurantEligibilityPolicy =
-            restaurantEligibilityPolicy;
+        this.restaurantEligibilityPolicy = restaurantEligibilityPolicy;
 
         this.breakfastScorer = breakfastScorer;
         this.residenceScorer = residenceScorer;
 
         this.days = Number(days) || 1;
         this.meals = Array.isArray(meals) ? meals : [];
-        this.numberOfPeople =
-            Number(numberOfPeople) || 1;
+        this.numberOfPeople = Number(numberOfPeople) || 1;
 
-        this.activityBudget =
-            Number(activityBudget) || 0;
+        this.activityBudget = Number(activityBudget) || 0;
 
         this.mealBudgets = {
             breakfast: Number(mealBudgets.breakfast) || 0,
@@ -50,21 +46,13 @@ class ItineraryPlanner {
             dinner: Number(mealBudgets.dinner) || 0,
         };
 
-        this.accommodationBudget =
-            Number(accommodationBudget) || 0;
+        this.accommodationBudget = Number(accommodationBudget) || 0;
     }
 
-    plan(
-        activities,
-        restaurants,
-        residencies,
-        nightActivities = [],
-        {
-            totalBudget = 0,
-            foodBudget = 0,
-            activityBudget = this.activityBudget,
-            transportBudget = 0,
-        } = {}
+    plan(activities, restaurants, residencies, nightActivities = [], {totalBudget = 0, foodBudget = 0,
+                                                                        activityBudget = this.activityBudget,
+                                                                        transportBudget = 0,
+                                                                     } = {}
     ) {
         const budgetSummary = new BudgetSummary({
             totalBudget,
@@ -75,52 +63,20 @@ class ItineraryPlanner {
             mealBudgets: this.mealBudgets,
         });
 
-        /*
-         * ---------------------------------------------------------
-         * 1. SELECT RESIDENCE
-         * ---------------------------------------------------------
-         */
 
-        const residenceResult =
-            this.residenceScorer?.selectBest(residencies);
+        const residenceResult = this.residenceScorer?.selectBest(residencies);
 
-        const residency =
-            residenceResult?.residence ?? null;
+        const residency = residenceResult?.residence ?? null;
 
         if (residency) {
-            const accommodationCost =
-                this._getAccommodationCost(residency);
+            const accommodationCost = this._getAccommodationCost(residency);
 
             if (accommodationCost !== null) {
-                budgetSummary.addAccommodationCost(
-                    accommodationCost
-                );
+                budgetSummary.addAccommodationCost(accommodationCost);
             }
         } else {
-            this._addResidenceDiagnosticWarning(
-                budgetSummary
-            );
+            this._addResidenceDiagnosticWarning(budgetSummary);
         }
-
-        /*
-         * ---------------------------------------------------------
-         * 2. SELECT ACTIVITY GROUPS
-         * ---------------------------------------------------------
-         *
-         * There are TWO groups per day:
-         *
-         *   Day 1:
-         *      morning group
-         *      afternoon group
-         *
-         *   Day 2:
-         *      morning group
-         *      afternoon group
-         *
-         * etc.
-         *
-         * A group may contain one or several activities.
-         */
 
         const activitySelector =
             new ActivitySelector({
@@ -129,8 +85,7 @@ class ItineraryPlanner {
                 days: this.days,
                 numberOfPeople: this.numberOfPeople,
                 activityBudget,
-                eligibilityPolicy:
-                    this.activityEligibilityPolicy,
+                eligibilityPolicy: this.activityEligibilityPolicy,
             });
 
         const {
@@ -142,24 +97,7 @@ class ItineraryPlanner {
             budgetSummary.addWarning(warning);
         }
 
-        /*
-         * Convert the selected groups into daily plans.
-         */
-        const days = DayPlanBuilder.build(
-            selectedActivityGroups,
-            this.days
-        );
-
-        /*
-         * ---------------------------------------------------------
-         * 3. ASSIGN RESTAURANTS
-         * ---------------------------------------------------------
-         *
-         * For now RestaurantAssigner still receives the daily
-         * plans. We will update it next so it understands the
-         * complete morning/afternoon groups rather than only
-         * morningActivity / afternoonActivity.
-         */
+        const days = DayPlanBuilder.build(selectedActivityGroups,this.days);
 
         const restaurantAssigner =
           new RestaurantAssigner({
@@ -171,17 +109,7 @@ class ItineraryPlanner {
               numberOfPeople: this.numberOfPeople,
           });
 
-        const daysWithRestaurants =
-            restaurantAssigner.assign(
-                days,
-                restaurants
-            );
-
-        /*
-         * ---------------------------------------------------------
-         * 4. BREAKFAST
-         * ---------------------------------------------------------
-         */
+        const daysWithRestaurants = restaurantAssigner.assign(days, restaurants);
 
         const breakfastSelector =
             new BreakfastSelector({
@@ -192,46 +120,24 @@ class ItineraryPlanner {
                 numberOfPeople: this.numberOfPeople,
             });
 
-        const breakfastSlots =
-            this.meals
+        const breakfastSlots = this.meals
                 .map(meal => String(meal).toLowerCase())
                 .includes('breakfast')
                 ? breakfastSelector.select(restaurants)
                 : [];
 
-        /*
-         * ---------------------------------------------------------
-         * 5. ACTIVITY COST ACCOUNTING
-         * ---------------------------------------------------------
-         *
-         * Important:
-         *
-         * morningActivity / afternoonActivity are now only
-         * representatives.
-         *
-         * The actual cost must include EVERY activity inside
-         * every group.
-         */
-
         for (const day of daysWithRestaurants) {
-            for (
-                const activity
-                of day.morningActivities ?? []
-            ) {
-                const cost =
-                    this._getActivityCost(activity);
+            for (const activity of day.morningActivities ?? []) {
+                const cost = this._getActivityCost(activity);
 
                 if (cost !== null) {
                     budgetSummary.addActivityCost(cost);
                 }
             }
 
-            for (
-                const activity
-                of day.afternoonActivities ?? []
+            for (const activity of day.afternoonActivities ?? []
             ) {
-                const cost =
-                    this._getActivityCost(activity);
+                const cost = this._getActivityCost(activity);
 
                 if (cost !== null) {
                     budgetSummary.addActivityCost(cost);
@@ -239,18 +145,9 @@ class ItineraryPlanner {
             }
         }
 
-        /*
-         * ---------------------------------------------------------
-         * 6. RESTAURANT COST ACCOUNTING
-         * ---------------------------------------------------------
-         */
-
         for (const day of daysWithRestaurants) {
             if (day.lunch) {
-                const cost =
-                    this._getRestaurantCost(
-                        day.lunch
-                    );
+                const cost = this._getRestaurantCost(day.lunch);
 
                 if (cost !== null) {
                     budgetSummary.addFoodCost(cost);
@@ -258,10 +155,7 @@ class ItineraryPlanner {
             }
 
             if (day.dinner) {
-                const cost =
-                    this._getRestaurantCost(
-                        day.dinner
-                    );
+                const cost = this._getRestaurantCost(day.dinner);
 
                 if (cost !== null) {
                     budgetSummary.addFoodCost(cost);
@@ -269,46 +163,19 @@ class ItineraryPlanner {
             }
         }
 
-        /*
-         * ---------------------------------------------------------
-         * 7. BREAKFAST COST ACCOUNTING
-         * ---------------------------------------------------------
-         */
-
         for (const slot of breakfastSlots) {
             if (!slot?.restaurant) {
                 continue;
             }
 
-            const cost =
-                this._getRestaurantCost(
-                    slot.restaurant
-                );
+            const cost = this._getRestaurantCost(slot.restaurant);
 
             if (cost !== null) {
                 budgetSummary.addFoodCost(cost);
             }
         }
 
-        /*
-         * ---------------------------------------------------------
-         * 8. FINALIZE BUDGET WARNINGS
-         * ---------------------------------------------------------
-         *
-         * This happens AFTER every selected item has been
-         * accounted for.
-         *
-         * Therefore the warning contains the actual amount
-         * exceeding the total/category budget.
-         */
-
         budgetSummary.finalizeWarnings();
-
-        /*
-         * ---------------------------------------------------------
-         * 9. RETURN COMPLETE PLAN
-         * ---------------------------------------------------------
-         */
 
         return {
           residency,
@@ -321,28 +188,17 @@ class ItineraryPlanner {
       };
     }
 
-    /*
-     * -------------------------------------------------------------
-     * COST HELPERS
-     * -------------------------------------------------------------
-     */
 
     _getActivityCost(activity) {
         if (!activity) {
             return null;
         }
 
-        if (
-            typeof activity.getEstimatedCost !==
-            'function'
-        ) {
+        if (typeof activity.getEstimatedCost !== 'function') {
             return null;
         }
 
-        const cost =
-            activity.getEstimatedCost(
-                this.numberOfPeople
-            );
+        const cost = activity.getEstimatedCost(this.numberOfPeople);
 
         if (!Number.isFinite(Number(cost))) {
             return null;
@@ -356,17 +212,11 @@ class ItineraryPlanner {
             return null;
         }
 
-        if (
-            typeof restaurant.getEstimatedMealCost !==
-            'function'
-        ) {
+        if (typeof restaurant.getEstimatedMealCost !== 'function') {
             return null;
         }
 
-        const cost =
-            restaurant.getEstimatedMealCost(
-                this.numberOfPeople
-            );
+        const cost = restaurant.getEstimatedMealCost(this.numberOfPeople);
 
         if (!Number.isFinite(Number(cost))) {
             return null;
@@ -380,18 +230,11 @@ class ItineraryPlanner {
             return null;
         }
 
-        if (
-            !this.residenceScorer ||
-            typeof this.residenceScorer
-                .getAccommodationCost !== 'function'
-        ) {
+        if (!this.residenceScorer || typeof this.residenceScorer.getAccommodationCost !== 'function') {
             return null;
         }
 
-        const cost =
-            this.residenceScorer.getAccommodationCost(
-                residency
-            );
+        const cost = this.residenceScorer.getAccommodationCost(residency);
 
         if (!Number.isFinite(Number(cost))) {
             return null;
@@ -400,24 +243,18 @@ class ItineraryPlanner {
         return Number(cost);
     }
 
-    _addResidenceDiagnosticWarning(
-        budgetSummary
-    ) {
+    _addResidenceDiagnosticWarning(budgetSummary) {
         if (!budgetSummary) {
             return;
         }
 
         if (!this.residenceScorer) {
-            budgetSummary.addWarning(
-                'No residence scorer is configured.'
-            );
+            budgetSummary.addWarning('No residence scorer is configured.');
 
             return;
         }
 
-        budgetSummary.addWarning(
-            'No suitable residence was found.'
-        );
+        budgetSummary.addWarning('No suitable residence was found.');
     }
 }
 

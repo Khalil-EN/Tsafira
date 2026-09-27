@@ -9,20 +9,13 @@ function ItineraryPlanDTO({
 }) {
     return {
         residency,
-
         days,
-
         breakfastSlots,
-
         nightActivities,
-
         meals,
-
         budget,
-
         warnings,
     };
 }
 
-module.exports =
-    ItineraryPlanDTO;
+module.exports = ItineraryPlanDTO;

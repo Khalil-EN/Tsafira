@@ -1,19 +1,13 @@
 const ActivityGrouper = require('./ActivityGrouper');
-const Location = require('../../locations/Location');
+const Location = require('../../locations/location');
 
 class ProximityGrouper extends ActivityGrouper {
-    constructor({
-        proximityKm = 5,
-        scoreDifference = 10,
-        maxActivitiesPerGroup = 2,
-        groupBudget = 0,
-    } = {}) {
+    constructor({proximityKm = 5, scoreDifference = 10, maxActivitiesPerGroup = 2, groupBudget = 0,} = {}) {
         super();
 
         this.proximityKm = Number(proximityKm) || 5;
         this.scoreDifference = Number(scoreDifference) || 10;
-        this.maxActivitiesPerGroup =
-            Math.max(1, Number(maxActivitiesPerGroup) || 2);
+        this.maxActivitiesPerGroup = Math.max(1, Number(maxActivitiesPerGroup) || 2);
         this.groupBudget = Number(groupBudget) || 0;
     }
 
@@ -34,11 +28,7 @@ class ProximityGrouper extends ActivityGrouper {
             const group = [seed];
 
             while (group.length < this.maxActivitiesPerGroup) {
-                const candidateIndex = this._findBestCandidate(
-                    group,
-                    remaining,
-                    groupBudget
-                );
+                const candidateIndex = this._findBestCandidate(group, remaining, groupBudget);
 
                 if (candidateIndex === -1) {
                     break;
@@ -74,36 +64,17 @@ class ProximityGrouper extends ActivityGrouper {
             const projectedCost = this._getGroupCost(group) +
                 this._getActivityCost(candidate);
 
-            const overrun = this._getBudgetOverrun(
-                projectedCost,
-                groupBudget
-            );
+            const overrun = this._getBudgetOverrun(projectedCost, groupBudget);
 
-            const distance = this._getAverageDistance(
-                candidate,
-                group
-            );
+            const distance = this._getAverageDistance(candidate, group);
 
-            candidates.push({
-                index,
-                candidate,
-                overrun,
-                distance,
-                score: this._getScore(candidate),
-            });
+            candidates.push({index, candidate, overrun, distance, score: this._getScore(candidate),});
         }
 
         if (candidates.length === 0) {
             return -1;
         }
 
-        /*
-         * Among activities of comparable quality and proximity:
-         *
-         * 1. Prefer the combination with the smallest budget overrun.
-         * 2. Then prefer the higher-quality activity.
-         * 3. Then prefer the closest activity.
-         */
         candidates.sort((a, b) => {
             if (a.overrun !== b.overrun) {
                 return a.overrun - b.overrun;
@@ -128,13 +99,9 @@ class ProximityGrouper extends ActivityGrouper {
 
     _isCloseEnoughToGroup(candidate, group) {
         return group.every(groupItem => {
-            const distance = Location.distanceBetween(
-                candidate.activity,
-                groupItem.activity
-            );
+            const distance = Location.distanceBetween(candidate.activity, groupItem.activity);
 
-            return Number.isFinite(distance) &&
-                distance <= this.proximityKm;
+            return Number.isFinite(distance) && distance <= this.proximityKm;
         });
     }
 
@@ -144,10 +111,7 @@ class ProximityGrouper extends ActivityGrouper {
         }
 
         const distances = group.map(groupItem =>
-            Location.distanceBetween(
-                candidate.activity,
-                groupItem.activity
-            )
+            Location.distanceBetween(candidate.activity, groupItem.activity)
         );
 
         const validDistances = distances.filter(
@@ -158,10 +122,7 @@ class ProximityGrouper extends ActivityGrouper {
             return Infinity;
         }
 
-        return validDistances.reduce(
-            (sum, distance) => sum + distance,
-            0
-        ) / validDistances.length;
+        return validDistances.reduce((sum, distance) => sum + distance, 0) / validDistances.length;
     }
 
     _getActivityCost(scoredActivity) {
@@ -169,10 +130,7 @@ class ProximityGrouper extends ActivityGrouper {
             return Number(scoredActivity.estimatedCost);
         }
 
-        if (
-            scoredActivity?.activity &&
-            typeof scoredActivity.activity.getEstimatedCost === 'function'
-        ) {
+        if (scoredActivity?.activity && typeof scoredActivity.activity.getEstimatedCost === 'function') {
             return Number(
                 scoredActivity.activity.getEstimatedCost(
                     scoredActivity.numberOfPeople || 1
@@ -184,10 +142,7 @@ class ProximityGrouper extends ActivityGrouper {
     }
 
     _getGroupCost(group) {
-        return group.reduce(
-            (total, item) => total + this._getActivityCost(item),
-            0
-        );
+        return group.reduce((total, item) => total + this._getActivityCost(item), 0);
     }
 
     _getBudgetOverrun(cost, budget) {
@@ -201,9 +156,7 @@ class ProximityGrouper extends ActivityGrouper {
     }
 
     _getOriginalScore(item) {
-        return Number(
-            item?.originalScore ?? item?.score ?? 0
-        );
+        return Number(item?.originalScore ?? item?.score ?? 0);
     }
 
     _getScore(item) {
@@ -216,16 +169,10 @@ class ProximityGrouper extends ActivityGrouper {
         const totalCost = this._getGroupCost(members);
 
         const averageScore =
-            members.reduce(
-                (sum, member) => sum + this._getScore(member),
-                0
-            ) / members.length;
+            members.reduce((sum, member) => sum + this._getScore(member), 0) / members.length;
 
         const qualityScore =
-            members.reduce(
-                (sum, member) => sum + this._getOriginalScore(member),
-                0
-            ) / members.length;
+            members.reduce((sum, member) => sum + this._getOriginalScore(member), 0) / members.length;
 
         return {
             activities,
@@ -235,10 +182,7 @@ class ProximityGrouper extends ActivityGrouper {
             qualityScore,
             totalCost,
             budget: Number(groupBudget) || 0,
-            overBudget: this._getBudgetOverrun(
-                totalCost,
-                groupBudget
-            ),
+            overBudget: this._getBudgetOverrun(totalCost, groupBudget),
         };
     }
 }

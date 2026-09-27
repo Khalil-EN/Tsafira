@@ -18,7 +18,6 @@ class FreemiumUser extends BaseUser {
     return currentCount < this.suggestionLimit;
   }
 
-  /** Returns the persistence delta — does not write to DB. */
   recordSuggestion() {
     const today        = DateRange.today();
     const lastUsed     = new Date(this.lastSuggestionDate || 0);

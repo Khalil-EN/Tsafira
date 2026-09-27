@@ -1,27 +1,16 @@
-const {
-    ValidationError,
-} = require("../../../exceptions");
+const { ValidationError } = require("../../../exceptions");
 
 function validateCreateCommunity(req, res, next) {
 
-    const {
-        name,
-        description,
-    } = req.body;
+    const {name, description} = req.body;
 
-    if (
-        typeof name !== "string" ||
-        name.trim().length === 0
-    ) {
+    if (typeof name !== "string" || name.trim().length === 0) {
         throw new ValidationError(
             "Community name is required."
         );
     }
 
-    if (
-        description !== undefined &&
-        typeof description !== "string"
-    ) {
+    if (description !== undefined && typeof description !== "string") {
         throw new ValidationError(
             "Community description must be a string."
         );

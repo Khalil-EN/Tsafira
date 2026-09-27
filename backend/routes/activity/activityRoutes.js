@@ -2,11 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 
-const ActivityController =
-    require("./activityController");
+const ActivityController = require("./activityController");
 
-const asyncHandler =
-    require("../../middlewares/asyncHandler");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 const {
     authenticateToken,
@@ -18,9 +16,6 @@ const auth = [
     authorizeRoles("admin", "premium", "freemium"),
 ];
 
-// ======================================================
-// GET ALL ACTIVITIES
-// ======================================================
 
 router.get(
     "/",

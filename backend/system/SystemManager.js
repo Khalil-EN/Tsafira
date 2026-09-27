@@ -20,6 +20,8 @@ const NotificationService    = require('../services/infra/notification/Notificat
 const AnalyticsService       = require('../services/infra/analytics/AnalyticsService');
 const AIService = require("../services/ai/AIService");
 
+// TODO : Must be refactored. For example, systemmanager should only deal with aggregat roots
+
 class SystemManager {
 
   // ========================
@@ -29,10 +31,7 @@ class SystemManager {
   async registerUser(userData) {
     const user = await securityManager.register(userData);
 
-
-    await securityManager.sendVerificationCode(
-        user
-    );
+    await securityManager.sendVerificationCode(user);
 
     return user;
   }
@@ -81,7 +80,6 @@ class SystemManager {
   }
 
   async updateProfile(userId, updates) {
-    console.log(userId);
     const user = await UserService.updateProfile(userId, updates);
     this._log(`User ${userId} updated their profile`);
     return user;
@@ -90,20 +88,18 @@ class SystemManager {
   async deleteProfile(user) {
     const userId = user?.id ?? user?._id;
 
-    // Order matters: remove this user's own posts (and every
-    // comment on those posts, by anyone) first, then their
-    // remaining comments on other people's posts, then their
-    // memberships and friendships, then the account itself —
-    // so nothing is left referencing a user that no longer exists.
     await PostService.deleteUserPosts(userId);
     await CommentService.deleteCommentsByAuthor(user);
     await PostService.removeLikesByUser(userId);
     await CommentService.removeLikesByUser(userId);
+
     await RequestService.deleteRequestsForUser(userId);
     await CommunityMemberService.removeAllMembershipsForUser(userId);
     await CommunityService.handleOwnedCommunitiesBeforeUserDeletion(userId);
+
     await ChatService.deleteDirectConversationsForUser(userId);
     await ChatService.deleteAIConversationForUser(userId);
+
     await UserService.removeFriendshipsForUser(userId);
     await UserService.deleteUser(userId);
 
@@ -114,20 +110,6 @@ class SystemManager {
   // 🔹 SUGGESTIONS
   // ========================
 
-  /**
-   * Full cross-service coordination for itinerary suggestion:
-   *
-   *  1. Enforce quota          → UserService.checkSuggestionLimit
-   *  2. Normalise raw inputs   → ActivityService.normalizeTypes
-   *                              RestaurantService.cleanCuisineTypes
-   *  3. Build request object   → ItineraryService.buildRequest (pure wrap, no service calls)
-   *  4. Fetch all data in parallel:
-   *       activities           → ActivityService.getAllActivities
-   *       night activities     → ActivityService.getNightActivities
-   *       restaurants          → RestaurantService.getAllRestaurants
-   *       residencies          → ResidenceService.getRawResidences
-   *  5. Build suggestion plan  → ItineraryService.buildSuggestion
-   */
   async generateSuggestedItinerary(userId, rawPreferences) {
     await UserService.checkSuggestionLimit(userId);
 
@@ -139,7 +121,6 @@ class SystemManager {
 
     const request = ItineraryService.buildRequest(normalisedPreferences);
 
-
     const [activities, nightActivities, restaurants, residencies] = await Promise.all([
                                                                         ActivityService.getActivitiesForPlanning(),
                                                                         ActivityService.getNightActivities(),
@@ -147,9 +128,7 @@ class SystemManager {
                                                                         ResidenceService.getResidencesForPlanning(),
                                                                     ]);
 
-    return ItineraryService.buildSuggestion(
-      request, activities, restaurants, residencies, nightActivities
-    );
+    return ItineraryService.buildSuggestion(request, activities, restaurants, residencies, nightActivities);
   }
 
   // ========================
@@ -253,9 +232,7 @@ class SystemManager {
   async deleteActivity(id)          { return await ActivityService.deleteActivity(id); }
 
   async searchActivities(filters) {
-    return await ActivityService.search(
-      ActivityService.normalizeSearchFilters(filters)
-    );
+    return await ActivityService.search(ActivityService.normalizeSearchFilters(filters));
   }
 
   // ========================
@@ -295,91 +272,39 @@ class SystemManager {
   }
 
   async getPendingCommunityRequests(communityId, actingUser) {
-    const actingUserId =
-      actingUser?.id ??
-      actingUser?._id ??
-      actingUser;
+    const actingUserId = actingUser?.id ?? actingUser?._id ?? actingUser;
 
-    return await CommunityMemberService.getPendingMembers(
-      communityId,
-      actingUserId
-    );
+    return await CommunityMemberService.getPendingMembers(communityId, actingUserId);
   }
 
   async approveCommunityMember(admin, communityId, userId) {
-    const adminId =
-      admin?.id ??
-      admin?._id ??
-      admin;
+    const adminId = admin?.id ?? admin?._id ?? admin;
 
-    const member =
-      await CommunityMemberService.approveMember(
-        communityId,
-        userId,
-        adminId
-      );
-
-    this._log(
-      `User ${userId} approved in community ${communityId}`
-    );
+    const member = await CommunityMemberService.approveMember(communityId, userId, adminId);
+    this._log(`User ${userId} approved in community ${communityId}`);
 
     return member;
   }
 
   async rejectCommunityMember(admin, communityId, userId) {
-    const adminId =
-      admin?.id ??
-      admin?._id ??
-      admin;
-
-    await CommunityMemberService.rejectMember(
-      communityId,
-      userId,
-      adminId
-    );
-
-    this._log(
-      `User ${userId} rejected from community ${communityId}`
-    );
+    const adminId = admin?.id ?? admin?._id ?? admin;
+    await CommunityMemberService.rejectMember(communityId, userId, adminId);
+    this._log(`User ${userId} rejected from community ${communityId}`);
   }
 
   async promoteCommunityMember(admin, communityId, userId, role) {
-    const adminId =
-      admin?.id ??
-      admin?._id ??
-      admin;
-
-    const member =
-      await CommunityMemberService.promoteMember(
-        communityId,
-        userId,
-        role,
-        adminId
-      );
-
-    this._log(
-      `User ${userId} promoted to ${role} in community ${communityId}`
-    );
+    const adminId = admin?.id ?? admin?._id ?? admin;
+    const member = await CommunityMemberService.promoteMember(communityId, userId, role,adminId);
+    this._log(`User ${userId} promoted to ${role} in community ${communityId}`);
 
     return member;
   }
 
   async banCommunityMember(admin, communityId, userId) {
-    const adminId =
-      admin?.id ??
-      admin?._id ??
-      admin;
+    const adminId = admin?.id ?? admin?._id ?? admin;
 
-    const member =
-      await CommunityMemberService.banMember(
-        communityId,
-        userId,
-        adminId
-      );
-
-    this._log(
-      `User ${userId} banned from community ${communityId} by ${adminId}`
-    );
+    const member = await CommunityMemberService.banMember(communityId, userId, adminId);
+    this._log(`User ${userId} banned from community ${communityId} by ${adminId}`);
 
     return member;
   }
@@ -402,53 +327,23 @@ class SystemManager {
 
   async getPostById(user, postId) {
 
-    const [
-      friendIds,
-      communityIds,
-    ] = await Promise.all([
-      FriendService.getFriendIds(user.id),
-      UserService.getUserCommunityIds(user.id),
+    const [friendIds, communityIds] = await Promise.all([
+                                    FriendService.getFriendIds(user.id),
+                                    UserService.getUserCommunityIds(user.id),
     ]);
 
-    return await PostService.getPostById(
-      user,
-      postId,
-      friendIds,
-      communityIds
-    );
+    return await PostService.getPostById(user, postId, friendIds, communityIds);
   }
 
  async likePost(user, postId) {
 
-    const [
-      friendIds,
-      communityIds,
-    ] = await Promise.all([
-      FriendService.getFriendIds(user.id),
-      UserService.getUserCommunityIds(user.id),
+    const [friendIds,communityIds] = await Promise.all([
+                                  FriendService.getFriendIds(user.id),
+                                  UserService.getUserCommunityIds(user.id),
     ]);
 
-    const post = await PostService.likePost(
-      user,
-      postId,
-      friendIds,
-      communityIds
-    );
-
-    this._log(
-      `User ${user.id} toggled like on post ${postId}`
-    );
-
-    AnalyticsService.log(
-      "like_post",
-      {
-        userId: user.id,
-        properties: {
-          postId,
-          liked: post.liked,
-        },
-      }
-    );
+    const post = await PostService.likePost(user, postId, friendIds, communityIds);
+    this._log(`User ${user.id} toggled like on post ${postId}`);
 
     return post;
   }
@@ -487,12 +382,9 @@ class SystemManager {
 
   async getCommentsByPost(user, postId) {
 
-    const [
-      friendIds,
-      communityIds,
-    ] = await Promise.all([
-      FriendService.getFriendIds(user.id),
-      UserService.getUserCommunityIds(user.id),
+    const [friendIds, communityIds] = await Promise.all([
+                                      FriendService.getFriendIds(user.id),
+                                      UserService.getUserCommunityIds(user.id),
     ]);
 
     await PostService.assertCanView(user.id, postId, friendIds, communityIds);
@@ -503,30 +395,9 @@ class SystemManager {
 
   async likeComment(user, commentId) {
 
-    const [
-      friendIds,
-      communityIds,
-    ] = await Promise.all([
-      FriendService.getFriendIds(user.id),
-      UserService.getUserCommunityIds(user.id),
-    ]);
-
     const comment = await CommentService.likeComment(user, commentId);
 
-    this._log(
-        `User ${user.id} toggled like on comment ${commentId}`
-    );
-
-    AnalyticsService.log(
-        "like_comment",
-        {
-            userId: user.id,
-            properties: {
-                commentId,
-                liked: comment.liked,
-            },
-        }
-    );
+    this._log(`User ${user.id} toggled like on comment ${commentId}`);
 
     return comment;
   }
@@ -557,15 +428,6 @@ class SystemManager {
   async sendFriendRequest(userId, targetUserId) {
     const request = await FriendService.sendFriendRequest(userId, targetUserId);
 
-    await NotificationService.send({
-      recipientId: targetUserId,
-      type:        'friend_request',
-      title:       'New Friend Request',
-      body:        'Someone wants to be your friend.',
-      refModel:    'Request',
-      refId:       request._id,
-    });
-
     AnalyticsService.log('send_friend_request', { userId });
     return request;
   }
@@ -574,47 +436,10 @@ class SystemManager {
 
   async acceptRequest(requestId, actingUserId) {
     const request = await RequestService.acceptRequest(requestId);
-
-    const isFriend = request.type === "friend";
-
-    await NotificationService.send({
-        recipientId: request.sender._id,
-        type: isFriend
-            ? "friend_accepted"
-            : "community_accepted",
-
-        title: isFriend
-            ? "Friend Request Accepted"
-            : "Community Request Accepted",
-
-        body: isFriend
-            ? "Your friend request was accepted!"
-            : `You are now a member of ${
-                request.community?.name || "the community"
-            }.`,
-
-        refModel: isFriend ? "User" : "Community",
-
-        refId: isFriend
-            ? request.recipient._id
-            : request.community?._id,
-    });
-
-    if (
-        actingUserId &&
-        /^[a-f\d]{24}$/i.test(actingUserId.toString())
-    ) {
-        AnalyticsService.log("accept_request", {
-            userId: actingUserId,
-        });
-    }
   }
 
   async rejectRequest(requestId, actingUserId) {
     await RequestService.rejectRequest(requestId);
-    if (actingUserId && /^[a-f\d]{24}$/i.test(actingUserId.toString())) {
-      AnalyticsService.log('reject_request', { userId: actingUserId });
-    }
   }
 
   // ========================
@@ -626,54 +451,28 @@ class SystemManager {
   }
 
   async getMessages(userId, conversationId, page = 1, limit = 30) {
-      return await ChatService.getMessages(
-          userId,
-          conversationId,
-          page,
-          limit
-      );
+      return await ChatService.getMessages(userId, conversationId, page, limit);
   }
 
   async sendMessage(senderId, conversationId, content) {
-      return await ChatService.sendMessage(
-          senderId,
-          conversationId,
-          content
-      );
+      return await ChatService.sendMessage(senderId, conversationId, content);
   }
 
   async getOrCreateDirectChat(userId, participantId) {
-      return await ChatService.getOrCreateDirectChat(
-          userId,
-          participantId
-      );
+      return await ChatService.getOrCreateDirectChat(userId, participantId);
   }
 
   async markConversationAsRead(userId, conversationId){
     return await ChatService.markConversationAsRead(userId, conversationId);
   }
 
-  async getOrCreateAIConversation(
-    userId
-  ) {
-    return await AIService
-      .getOrCreateConversation(
-        userId
-      );
+  async getOrCreateAIConversation(userId) {
+    return await AIService.getOrCreateConversation(userId);
   }
 
 
-  async sendAIMessage(
-    userId,
-    conversationId,
-    content
-  ) {
-    return await AIService
-      .sendMessage(
-        userId,
-        conversationId,
-        content
-      );
+  async sendAIMessage(userId, conversationId, content) {
+    return await AIService.sendMessage(userId, conversationId, content);
   }
 
   // ========================
@@ -688,6 +487,8 @@ class SystemManager {
   // ========================
   // 🔹 NOTIFICATIONS
   // ========================
+
+  // TODO : The notification system is still being developped so the DAO wouldn't be here 
 
   async getNotifications(userId, opts) {
     const NotificationDAO = require('../dao/notificationDAO');
@@ -710,78 +511,38 @@ class SystemManager {
   }
 
   // ========================
-  // ADMIN — USERS
+  // ADMIN 
   // ========================
 
   async getAllUsers({ page = 1, limit = 20 } = {}) {
-    return UserService.getAllUsers({
-      page,
-      limit,
-    });
+    return UserService.getAllUsers({page, limit,});
   }
 
   async banUser(adminId, targetUserId) {
     const user = await UserService.banUser(targetUserId);
+    this._log(`Admin ${adminId} banned user ${targetUserId}`);
 
-    this._log(
-      `Admin ${adminId} banned user ${targetUserId}`
-    );
-
-    AnalyticsService.log("admin_ban_user", {
-      userId: adminId,
-      properties: {
-        targetUserId,
-      },
-    });
+    AnalyticsService.log("admin_ban_user", {userId: adminId, properties: {targetUserId},});
 
     return user;
   }
 
   async unbanUser(adminId, targetUserId) {
     const user = await UserService.unbanUser(targetUserId);
+    this._log(`Admin ${adminId} unbanned user ${targetUserId}`);
 
-    this._log(
-      `Admin ${adminId} unbanned user ${targetUserId}`
-    );
-
-    AnalyticsService.log("admin_unban_user", {
-      userId: adminId,
-      properties: {
-        targetUserId,
-      },
-    });
+    AnalyticsService.log("admin_unban_user", {userId: adminId, properties: {targetUserId,},});
 
     return user;
   }
 
-
-  // ========================
-  // ADMIN — CONTENT
-  // ========================
-
   async adminDeletePost(adminId, postId) {
-    await PostService.deletePost(
-      {
-        id: adminId,
-        role: 'admin',
-      },
-      postId
-    );
+    await PostService.deletePost({id: adminId, role: 'admin'}, postId);
 
-    this._log(
-      `Admin ${adminId} deleted post ${postId}`
-    );
+    this._log(`Admin ${adminId} deleted post ${postId}`);
 
-    AnalyticsService.log('admin_delete_post', {
-      userId: adminId,
-      properties: { postId },
-    });
+    AnalyticsService.log('admin_delete_post', {userId: adminId, properties: { postId },});
   }
-
-
-  // ========================
-  // ADMIN — ANALYTICS
-  // ========================
 
   async getAnalyticsEventCounts(filters = {}) {
     return AnalyticsService.getEventCounts(filters);
@@ -795,15 +556,7 @@ class SystemManager {
     return AnalyticsService.getRecentEvents(filters);
   }
 
-
-  // ========================
-  // ADMIN — BROADCAST
-  // ========================
-
-  async sendSystemNotification(
-    adminId,
-    { recipientIds, title, body }
-  ) {
+  async sendSystemNotification(adminId, {recipientIds, title, body }) {
     let ids = recipientIds;
 
     if (recipientIds === "all") {
@@ -814,23 +567,11 @@ class SystemManager {
       return 0;
     }
 
-    await NotificationService.sendToMany({
-      recipientIds: ids,
-      type: "system",
-      title,
-      body,
-    });
+    await NotificationService.sendToMany({recipientIds: ids, type: "system", title, body,});
 
-    this._log(
-      `Admin ${adminId} broadcast notification to ${ids.length} users`
-    );
+    this._log(`Admin ${adminId} broadcast notification to ${ids.length} users`);
 
-    AnalyticsService.log("admin_send_notification", {
-      userId: adminId,
-      properties: {
-        recipientCount: ids.length,
-      },
-    });
+    AnalyticsService.log("admin_send_notification", {userId: adminId, properties: {recipientCount: ids.length}});
 
     return ids.length;
   }

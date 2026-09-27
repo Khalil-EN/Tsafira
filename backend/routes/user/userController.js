@@ -4,11 +4,7 @@ const UserController = {
 
     async updateProfile(req, res) {
 
-        const user =
-            await systemManager.updateProfile(
-                req.user.id,
-                req.body
-            );
+        const user = await systemManager.updateProfile(req.user.id, req.body);
 
         return res.status(200).json({
             success: true,

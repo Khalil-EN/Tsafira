@@ -3,7 +3,6 @@ const CommunityMemberModel = require("../schemas/communityMemberSchema");
 const CommunityMemberDAO = {
   async addMember(data) {
     const member = new CommunityMemberModel(data);
-    console.log(member);
     return await member.save();
   },
 

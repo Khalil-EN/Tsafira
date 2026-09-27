@@ -14,8 +14,6 @@ const EmailService = {
 
     async sendVerificationCode(email, code) {
 
-        console.log("here");
-
         await transporter.sendMail({
             from: process.env.SMTP_FROM,
             to: email,

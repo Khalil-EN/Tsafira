@@ -1,6 +1,4 @@
-const {
-    ValidationError,
-} = require("../../../exceptions");
+const { ValidationError } = require("../../../exceptions");
 
 function validateRequestId(req, res, next) {
 

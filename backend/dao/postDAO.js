@@ -163,6 +163,6 @@ const PostDAO = {
       }
     );
   },
-  };
+};
 
 module.exports = PostDAO;

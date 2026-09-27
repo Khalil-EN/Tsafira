@@ -1,190 +1,93 @@
-const ItineraryDAO =
-    require('../../dao/itineraryDAO');
+const ItineraryDAO = require('../../dao/itineraryDAO');
 
-const ItineraryFactory =
-    require('../../domain/itineraries/models/ItineraryFactory');
+const ItineraryFactory = require('../../domain/itineraries/models/ItineraryFactory');
 
-const TripPlanningRequest =
-    require('../../domain/itineraries/models/TripPlanningRequest');
+const TripPlanningRequest = require('../../domain/itineraries/models/TripPlanningRequest');
 
-const ScoringConfig =
-    require('../../domain/itineraries/config/ScoringConfig');
+const ScoringConfig = require('../../domain/itineraries/config/ScoringConfig');
 
-const ItineraryPlannerFactory =
-    require('../../domain/itineraries/planning/ItineraryPlannerFactory');
+const ItineraryPlannerFactory = require('../../domain/itineraries/planning/ItineraryPlannerFactory');
 
-const ItineraryAssembler =
-    require('./ItineraryAssembler');
+const ItineraryAssembler = require('./ItineraryAssembler');
+const ItineraryPlanAssembler = require('./plan/ItineraryPlanAssembler');
 
-const ItineraryPlanAssembler =
-    require('./plan/ItineraryPlanAssembler');
-
-const NotFoundError =
-    require('../../exceptions/NotFoundError');
+const NotFoundError = require('../../exceptions/NotFoundError');
 
 const ItineraryService = {
     async createItinerary(data) {
-        const raw =
-            await ItineraryDAO.create(
-                data
-            );
+        const raw = await ItineraryDAO.create(data);
 
-        const itinerary =
-            ItineraryFactory.create(
-                raw
-            );
+        const itinerary = ItineraryFactory.create(raw);
 
-        return ItineraryAssembler.toDTO(
-            itinerary
-        );
+        return ItineraryAssembler.toDTO(itinerary);
     },
 
     async getItineraryById(id) {
-        const itinerary =
-            await ItineraryService
-                ._getItineraryDomainById(
-                    id
-                );
+        const itinerary = await ItineraryService._getItineraryDomainById(id);
 
         if (!itinerary) {
-            throw new NotFoundError(
-                'Itinerary not found'
-            );
+            throw new NotFoundError('Itinerary not found');
         }
 
-        return ItineraryAssembler.toDTO(
-            itinerary
-        );
+        return ItineraryAssembler.toDTO(itinerary);
     },
 
-    async getItinerariesByUser(
-        userId
-    ) {
-        const rawList =
-            await ItineraryDAO.getByUserId(
-                userId
-            );
+    async getItinerariesByUser(userId) {
+        const rawList = await ItineraryDAO.getByUserId(userId);
 
-        const itineraries =
-            rawList.map(
-                raw =>
-                    ItineraryFactory.create(
-                        raw
-                    )
-            );
+        const itineraries = rawList.map(raw => ItineraryFactory.create(raw));
 
-        return ItineraryAssembler.toDTOList(
-            itineraries
-        );
+        return ItineraryAssembler.toDTOList(itineraries);
     },
 
-    async updateItinerary(
-        id,
-        updates
-    ) {
-        const raw =
-            await ItineraryDAO.update(
-                id,
-                updates
-            );
+    async updateItinerary(id, updates) {
+        const raw = await ItineraryDAO.update(id, updates);
 
         if (!raw) {
-            throw new NotFoundError(
-                'Itinerary not found'
-            );
+            throw new NotFoundError('Itinerary not found');
         }
 
-        const itinerary =
-            ItineraryFactory.create(
-                raw
-            );
+        const itinerary = ItineraryFactory.create(raw);
 
-        return ItineraryAssembler.toDTO(
-            itinerary
-        );
+        return ItineraryAssembler.toDTO(itinerary);
     },
 
     async deleteItinerary(id) {
-        return await ItineraryDAO.delete(
-            id
-        );
+        return await ItineraryDAO.delete(id);
     },
 
-    async _getItineraryDomainById(
-        id
-    ) {
-        const raw =
-            await ItineraryDAO.getById(
-                id
-            );
+    async _getItineraryDomainById(id) {
+
+        const raw = await ItineraryDAO.getById(id);
 
         if (!raw) {
             return null;
         }
 
-        return ItineraryFactory.create(
-            raw
-        );
+        return ItineraryFactory.create(raw);
     },
 
-    buildRequest(
-        normalisedPreferences
-    ) {
-        return TripPlanningRequest.from(
-            normalisedPreferences
-        );
+    buildRequest(normalisedPreferences) {
+        return TripPlanningRequest.from(normalisedPreferences);
     },
 
-    buildSuggestion(
-        request,
-        activities,
-        restaurants,
-        residencies,
-        nightActivities
-    ) {
-        const config =
-            ScoringConfig.fromRequest(
-                request
+    buildSuggestion(request, activities, restaurants, residencies, nightActivities) {
+
+        const config = ScoringConfig.fromRequest(request);
+
+        const planner = ItineraryPlannerFactory.create(request, config);
+
+        const rawPlan = planner.plan(activities, restaurants, residencies, nightActivities,
+                                    {
+                                        totalBudget: config.maxBudget,
+                                        foodBudget: config.foodBudget,
+                                        activityBudget: config.activityBudget,
+                                        transportBudget: config.transportBudget,
+                                    }
             );
 
-        const planner =
-            ItineraryPlannerFactory.create(
-                request,
-                config
-            );
-
-        const rawPlan =
-            planner.plan(
-                activities,
-                restaurants,
-                residencies,
-                nightActivities,
-                {
-                    totalBudget:
-                        config.maxBudget,
-
-                    foodBudget:
-                        config.foodBudget,
-
-                    activityBudget:
-                        config.activityBudget,
-
-                    transportBudget:
-                        config.transportBudget,
-                }
-            );
-
-        console.log(
-            'Generated itinerary plan:',
-            rawPlan
-        );
-
-        return ItineraryPlanAssembler.toResponse(
-            rawPlan,
-            request
-        );
+        return ItineraryPlanAssembler.toResponse(rawPlan, request);
     },
 };
 
-module.exports =
-    ItineraryService;
+module.exports = ItineraryService;

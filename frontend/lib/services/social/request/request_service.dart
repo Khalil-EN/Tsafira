@@ -3,10 +3,6 @@ import '../../http_client.dart';
 
 class RequestService {
 
-  // ============================================================
-  // REQUESTS
-  // ============================================================
-
   static Future<
       Map<String, List<Map<String, dynamic>>>
   > getRequests() async {
@@ -30,10 +26,6 @@ class RequestService {
     };
   }
 
-  // ============================================================
-  // PENDING RECEIVED REQUEST COUNT
-  // ============================================================
-
   static Future<int> getPendingReceivedCount() async {
     final requests =
     await getRequests();
@@ -49,10 +41,6 @@ class RequestService {
     }).length;
   }
 
-  // ============================================================
-  // ACCEPT
-  // ============================================================
-
   static Future<void> acceptRequest(
       String requestId,
       ) async {
@@ -62,10 +50,6 @@ class RequestService {
       'requests/$requestId/accept',
     );
   }
-
-  // ============================================================
-  // REJECT
-  // ============================================================
 
   static Future<void> rejectRequest(
       String requestId,

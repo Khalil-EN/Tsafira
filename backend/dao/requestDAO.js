@@ -5,17 +5,10 @@ const {
 } = require("../domain/request/enums/requestEnums");
 
 const RequestDAO = {
-  // ==========================================================================
-  // CREATE
-  // ==========================================================================
 
   async create(data) {
     return await new RequestModel(data).save();
   },
-
-  // ==========================================================================
-  // RECEIVED REQUESTS
-  // ==========================================================================
 
   async getReceivedRequests(userId) {
     return await RequestModel.find({
@@ -39,10 +32,6 @@ const RequestDAO = {
       })
       .lean();
   },
-
-  // ==========================================================================
-  // SENT REQUESTS
-  // ==========================================================================
 
   async getSentRequests(userId) {
     return await RequestModel.find({
@@ -76,10 +65,6 @@ const RequestDAO = {
     });
   },
 
-  // ==========================================================================
-  // SINGLE REQUEST
-  // ==========================================================================
-
   async getRequestById(requestId) {
     return await RequestModel.findById(requestId)
       .populate(
@@ -97,10 +82,6 @@ const RequestDAO = {
       .lean();
   },
 
-  // ==========================================================================
-  // FIND PENDING REQUEST
-  // ==========================================================================
-
   async findPendingRequest(
     senderId,
     recipientId,
@@ -113,10 +94,6 @@ const RequestDAO = {
       status: RequestStatus.PENDING,
     }).lean();
   },
-
-  // ==========================================================================
-  // UPDATE STATUS
-  // ==========================================================================
 
   async updateRequestStatus(
     requestId,
@@ -132,10 +109,6 @@ const RequestDAO = {
       }
     ).lean();
   },
-
-  // ==========================================================================
-  // COMMUNITY REQUEST STATUS
-  // ==========================================================================
 
   async updateRequestByTypeAndRef(
     type,

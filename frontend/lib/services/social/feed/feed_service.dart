@@ -2,9 +2,6 @@ import '../../api_response.dart';
 import '../../http_client.dart';
 
 class FeedService {
-  // ============================================================
-  // GET FEED
-  // ============================================================
 
   static Future<List<Map<String, dynamic>>> getFeed({
     int page = 1,

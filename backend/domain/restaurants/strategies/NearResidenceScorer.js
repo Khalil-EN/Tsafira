@@ -1,40 +1,26 @@
-const RestaurantScorer =
-    require('./RestaurantScorer');
+const RestaurantScorer = require('./RestaurantScorer');
 
-const Location =
-    require('../../locations/Location');
+const Location = require('../../locations/location');
 
-class NearResidenceScorer
-    extends RestaurantScorer {
+class NearResidenceScorer extends RestaurantScorer {
 
     score(restaurant, residence) {
         if (!restaurant || !residence) {
             return -Infinity;
         }
 
-        const distance =
-            Location.distanceBetween(
-                restaurant,
-                residence
-            );
+        const distance = Location.distanceBetween(restaurant,residence);
 
         let score = 0;
 
-        score +=
-            (1 / Math.max(distance, 0.01)) *
-            10;
+        score += (1 / Math.max(distance, 0.01)) * 10;
 
-        score +=
-            (restaurant.numberOfReviews || 0) /
-            10;
+        score += (restaurant.numberOfReviews || 0) / 10;
 
-        score +=
-            (restaurant.rating || 0) *
-            10;
+        score += (restaurant.rating || 0) * 10;
 
         return score;
     }
 }
 
-module.exports =
-    NearResidenceScorer;
+module.exports = NearResidenceScorer;

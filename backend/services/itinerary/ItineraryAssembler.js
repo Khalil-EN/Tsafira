@@ -6,9 +6,7 @@ const ItineraryAssembler = {
   },
 
   toDTOList(itineraries) {
-    return itineraries.map(itinerary =>
-      ItineraryAssembler.toDTO(itinerary)
-    );
+    return itineraries.map(itinerary => ItineraryAssembler.toDTO(itinerary));
   },
 };
 

@@ -39,7 +39,6 @@ const RestaurantDAO = {
 
     for (const key in filters) {
       if (Array.isArray(filters[key])) {
-        // e.g., activitytype: ['museum', 'beach']
         const placeholders = filters[key].map(() => `$${i++}`).join(', ');
         conditions.push(`${key} IN (${placeholders})`);
         values.push(...filters[key]);
@@ -65,26 +64,10 @@ const RestaurantDAO = {
       params.push(priceLevel);
     }
 
-    /*if (location) {
-      query += ` AND address ILIKE $${idx++}`;
-      params.push(`%${location}%`);
-    }*/
-
-    // Filter by cuisines (tags) – assumes tags is a text[] column
     if (cuisines && cuisines.length > 0) {
       query += ` AND tags && $${idx++}::text[]`;
-      params.push(cuisines); // e.g., ['Italian', 'Mexican']
+      params.push(cuisines);
     }
-
-    // Filter by time if provided
-    /*if (time) {
-      // Example format: "13:00" (24h)
-      query += ` AND (
-        to_timestamp(split_part(openinghours, '-', 1), 'HH12:MI AM') <= to_timestamp($${idx}, 'HH24:MI')
-        AND to_timestamp(split_part(openinghours, '-', 2), 'HH12:MI AM') >= to_timestamp($${idx++}, 'HH24:MI')
-      )`;
-      params.push(time);
-    }*/
 
     const result = await pool.query(query, params);
     return result.rows;

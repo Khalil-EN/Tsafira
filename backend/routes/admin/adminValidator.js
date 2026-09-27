@@ -1,12 +1,7 @@
 const mongoose = require("mongoose");
 
-const {
-  ValidationError,
-} = require("../../exceptions");
+const { ValidationError } = require("../../exceptions");
 
-// ======================================================
-// HELPERS
-// ======================================================
 
 function isValidDate(value) {
   if (!value) return false;
@@ -41,33 +36,19 @@ function validateDateRange(from, to) {
   }
 }
 
-// ======================================================
-// USER QUERIES
-// ======================================================
-
 function validateUsersQuery(req, res, next) {
-  const {
-    page = "1",
-    limit = "20",
-  } = req.query;
+  const {page = "1", limit = "20"} = req.query;
 
   const parsedPage = Number(page);
   const parsedLimit = Number(limit);
 
-  if (
-    !Number.isInteger(parsedPage) ||
-    parsedPage < 1
-  ) {
+  if (!Number.isInteger(parsedPage) || parsedPage < 1) {
     throw new ValidationError(
       "'page' must be a positive integer."
     );
   }
 
-  if (
-    !Number.isInteger(parsedLimit) ||
-    parsedLimit < 1 ||
-    parsedLimit > 100
-  ) {
+  if (!Number.isInteger(parsedLimit) || parsedLimit < 1 || parsedLimit > 100) {
     throw new ValidationError(
       "'limit' must be an integer between 1 and 100."
     );
@@ -78,10 +59,6 @@ function validateUsersQuery(req, res, next) {
 
   next();
 }
-
-// ======================================================
-// USER / POST ID
-// ======================================================
 
 function validateUserId(req, res, next) {
   const { id } = req.params;
@@ -95,23 +72,12 @@ function validateUserId(req, res, next) {
   next();
 }
 
-// ======================================================
-// ANALYTICS EVENTS
-// ======================================================
-
 function validateAnalyticsEventsQuery(req, res, next) {
-  const {
-    from,
-    to,
-    groupBy = "event",
-  } = req.query;
+  const {from, to, groupBy = "event"} = req.query;
 
   validateDateRange(from, to);
 
-  const allowedGroupBy = [
-    "event",
-    "userId",
-  ];
+  const allowedGroupBy = ["event", "userId"];
 
   if (!allowedGroupBy.includes(groupBy)) {
     throw new ValidationError(
@@ -124,52 +90,27 @@ function validateAnalyticsEventsQuery(req, res, next) {
   next();
 }
 
-// ======================================================
-// ANALYTICS DAU
-// ======================================================
-
 function validateAnalyticsDauQuery(req, res, next) {
-  const {
-    from,
-    to,
-  } = req.query;
+  const {from, to} = req.query;
 
   validateDateRange(from, to);
 
   next();
 }
 
-// ======================================================
-// ANALYTICS RECENT EVENTS
-// ======================================================
 
-function validateAnalyticsRecentQuery(
-  req,
-  res,
-  next
-) {
-  const {
-    limit = "100",
-    event,
-    userId,
-  } = req.query;
+function validateAnalyticsRecentQuery(req, res, next) {
+  const {limit = "100", event, userId} = req.query;
 
   const parsedLimit = Number(limit);
 
-  if (
-    !Number.isInteger(parsedLimit) ||
-    parsedLimit < 1 ||
-    parsedLimit > 500
-  ) {
+  if (!Number.isInteger(parsedLimit) || parsedLimit < 1 || parsedLimit > 500) {
     throw new ValidationError(
       "'limit' must be an integer between 1 and 500."
     );
   }
 
-  if (
-    userId &&
-    !mongoose.Types.ObjectId.isValid(userId)
-  ) {
+  if (userId && !mongoose.Types.ObjectId.isValid(userId)) {
     throw new ValidationError(
       "Invalid userId."
     );
@@ -180,42 +121,23 @@ function validateAnalyticsRecentQuery(
   next();
 }
 
-// ======================================================
-// BROADCAST
-// ======================================================
 
 function validateBroadcast(req, res, next) {
-  const {
-    recipientIds,
-    title,
-    body,
-  } = req.body;
+  const {recipientIds, title, body} = req.body;
 
-  if (
-    typeof title !== "string" ||
-    !title.trim()
-  ) {
+  if (typeof title !== "string" || !title.trim()) {
     throw new ValidationError(
       "Title is required."
     );
   }
 
-  if (
-    typeof body !== "string" ||
-    !body.trim()
-  ) {
+  if (typeof body !== "string" || !body.trim()) {
     throw new ValidationError(
       "Body is required."
     );
   }
 
-  if (
-    !recipientIds ||
-    (
-      !Array.isArray(recipientIds) &&
-      recipientIds !== "all"
-    )
-  ) {
+  if (!recipientIds || (!Array.isArray(recipientIds) && recipientIds !== "all")) {
     throw new ValidationError(
       "recipientIds must be an array or 'all'."
     );
@@ -223,10 +145,8 @@ function validateBroadcast(req, res, next) {
 
   if (Array.isArray(recipientIds)) {
     for (const id of recipientIds) {
-      if (
-        typeof id !== "string" ||
-        !mongoose.Types.ObjectId.isValid(id)
-      ) {
+
+      if (typeof id !== "string" || !mongoose.Types.ObjectId.isValid(id)) {
         throw new ValidationError(
           "recipientIds contains an invalid user ID."
         );
@@ -234,14 +154,11 @@ function validateBroadcast(req, res, next) {
     }
   }
 
-  // Normalize strings before reaching SystemManager.
   req.body.title = title.trim();
   req.body.body = body.trim();
 
   next();
 }
-
-// ======================================================
 
 module.exports = {
   validateUsersQuery,

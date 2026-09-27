@@ -1,22 +1,11 @@
-const {
-    ValidationError,
-} = require("../../exceptions");
+const { ValidationError } = require("../../exceptions");
 
 
-function validateUserCommunitySearch(
-    req,
-    res,
-    next
-) {
+function validateUserCommunitySearch(req, res, next) {
 
-    const {
-        query,
-    } = req.body;
+    const {query} = req.body;
 
-    if (
-        typeof query !== "string" ||
-        query.trim().length === 0
-    ) {
+    if (typeof query !== "string" || query.trim().length === 0) {
         throw new ValidationError(
             "Search query is required."
         );
@@ -26,17 +15,9 @@ function validateUserCommunitySearch(
 }
 
 
-function validateSearchFilters(
-    req,
-    res,
-    next
-) {
+function validateSearchFilters(req, res,next) {
 
-    if (
-        !req.body ||
-        typeof req.body !== "object" ||
-        Array.isArray(req.body)
-    ) {
+    if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) {
         throw new ValidationError(
             "Search filters must be an object."
         );

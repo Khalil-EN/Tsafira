@@ -2,11 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 
-const ResidenceController =
-    require("./residenceController");
+const ResidenceController = require("./residenceController");
 
-const asyncHandler =
-    require("../../middlewares/asyncHandler");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 const {
     authenticateToken,

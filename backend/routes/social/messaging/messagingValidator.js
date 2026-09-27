@@ -1,6 +1,4 @@
-const {
-    ValidationError,
-} = require("../../../exceptions");
+const { ValidationError} = require("../../../exceptions");
 
 function validateParticipant(req, res, next) {
 
@@ -26,10 +24,7 @@ function validateConversationId(req, res, next) {
 
 function validateSendMessage(req, res, next) {
 
-    const {
-        conversationId,
-        content,
-    } = req.body;
+    const {conversationId, content} = req.body;
 
     if (!conversationId) {
         throw new ValidationError(
@@ -37,10 +32,7 @@ function validateSendMessage(req, res, next) {
         );
     }
 
-    if (
-        typeof content !== "string" ||
-        content.trim().length === 0
-    ) {
+    if (typeof content !== "string" || content.trim().length === 0) {
         throw new ValidationError(
             "Message content is required."
         );

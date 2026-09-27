@@ -24,35 +24,25 @@ class Residence {
         this.address = address ?? null;
 
         // PRICE = one room / one night
-        this.priceRange = Number.isFinite(Number(priceRange))
-            ? Number(priceRange)
-            : null;
+        this.priceRange = Number.isFinite(Number(priceRange)) ? Number(priceRange) : null;
 
-        this.rating = Number.isFinite(Number(rating))
-            ? Number(rating)
-            : 0;
+        this.rating = Number.isFinite(Number(rating)) ? Number(rating) : 0;
 
-        this.numberOfReviews = Number.isFinite(Number(numberOfReviews))
-            ? Number(numberOfReviews)
-            : 0;
+        this.numberOfReviews = Number.isFinite(Number(numberOfReviews)) ? Number(numberOfReviews) : 0;
 
         this.checkInDate = checkInDate ?? null;
         this.checkOutDate = checkOutDate ?? null;
 
         this.image = image ?? null;
 
-        this.secondaryImages = Array.isArray(secondaryImages)
-            ? secondaryImages
-            : [];
+        this.secondaryImages = Array.isArray(secondaryImages) ? secondaryImages : [];
 
         this.longitude = longitude ?? null;
         this.latitude = latitude ?? null;
 
         this.contactInfo = contactInfo ?? null;
 
-        this.amenities = Array.isArray(amenities)
-            ? amenities
-            : [];
+        this.amenities = Array.isArray(amenities) ? amenities : [];
     }
 
     getCoordinates() {
@@ -66,10 +56,7 @@ class Residence {
         return this.priceRange;
     }
 
-    getEstimatedAccommodationCost({
-        nights,
-        rooms,
-    }) {
+    getEstimatedAccommodationCost({nights, rooms}) {
         const price = Number(this.priceRange);
         const numberOfNights = Number(nights);
         const numberOfRooms = Number(rooms);
@@ -78,25 +65,15 @@ class Residence {
             return null;
         }
 
-        if (
-            !Number.isFinite(numberOfNights) ||
-            numberOfNights <= 0
-        ) {
+        if (!Number.isFinite(numberOfNights) || numberOfNights <= 0) {
             return null;
         }
 
-        if (
-            !Number.isFinite(numberOfRooms) ||
-            numberOfRooms <= 0
-        ) {
+        if (!Number.isFinite(numberOfRooms) || numberOfRooms <= 0) {
             return null;
         }
 
-        return (
-            price *
-            numberOfNights *
-            numberOfRooms
-        );
+        return (price * numberOfNights * numberOfRooms);
     }
 
     hasAmenity(amenity) {
@@ -105,9 +82,7 @@ class Residence {
         }
 
         return this.amenities.some(
-            item =>
-                typeof item === 'string' &&
-                item.toLowerCase() === amenity.toLowerCase()
+            item => typeof item === 'string' && item.toLowerCase() === amenity.toLowerCase()
         );
     }
 

@@ -1,5 +1,4 @@
-const userFactory =
-    require("../../domain/users/userFactory");
+const userFactory = require("../../domain/users/userFactory");
 
 const UserMapper = {
     fromPersistence(doc) {
@@ -24,31 +23,18 @@ const UserMapper = {
             friends: doc.friends,
             communities: doc.communities,
 
-            suggestionCountToday:
-                doc.suggestionCountToday,
-
-            lastSuggestionDate:
-                doc.lastSuggestionDate,
+            suggestionCountToday: doc.suggestionCountToday,
+            lastSuggestionDate: doc.lastSuggestionDate,
 
             createdAt: doc.createdAt,
 
-            emailVerified:
-                doc.emailVerified,
+            emailVerified: doc.emailVerified,
+            emailVerificationCode: doc.emailVerificationCode,
+            emailVerificationExpiresAt: doc.emailVerificationExpiresAt,
+            refreshToken: doc.refreshToken,
+            fcmToken: doc.fcmToken,
 
-            emailVerificationCode:
-                doc.emailVerificationCode,
-
-            emailVerificationExpiresAt:
-                doc.emailVerificationExpiresAt,
-
-            refreshToken:
-                doc.refreshToken,
-
-            fcmToken:
-                doc.fcmToken,
-
-            postsCount:
-                doc.postsCount,
+            postsCount: doc.postsCount,
         });
     },
 
@@ -72,28 +58,16 @@ const UserMapper = {
             friends: user.friends,
             communities: user.communities,
 
-            suggestionCountToday:
-                user.suggestionCountToday,
-
-            lastSuggestionDate:
-                user.lastSuggestionDate,
+            suggestionCountToday: user.suggestionCountToday,
+            lastSuggestionDate: user.lastSuggestionDate,
 
             createdAt: user.createdAt,
 
-            emailVerified:
-                user.emailVerified,
-
-            emailVerificationCode:
-                user.emailVerificationCode,
-
-            emailVerificationExpiresAt:
-                user.emailVerificationExpiresAt,
-
-            refreshToken:
-                user.refreshToken,
-
-            fcmToken:
-                user.fcmToken,
+            emailVerified: user.emailVerified,
+            emailVerificationCode: user.emailVerificationCode,
+            emailVerificationExpiresAt: user.emailVerificationExpiresAt,
+            refreshToken: user.refreshToken,
+            fcmToken: user.fcmToken,
         };
     },
 };

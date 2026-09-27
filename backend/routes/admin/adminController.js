@@ -2,21 +2,10 @@ const systemManager = require("../../system/SystemManager");
 
 const AdminController = {
 
-  // ======================================================
-  // USERS
-  // ======================================================
-
   async getUsers(req, res) {
-    const {
-      page,
-      limit,
-    } = req.query;
+    const {page, limit} = req.query;
 
-    const result =
-      await systemManager.getAllUsers({
-        page,
-        limit,
-      });
+    const result = await systemManager.getAllUsers({page, limit});
 
     return res.status(200).json({
       success: true,
@@ -25,10 +14,7 @@ const AdminController = {
   },
 
   async banUser(req, res) {
-    const user = await systemManager.banUser(
-      req.user.id,
-      req.params.id
-    );
+    const user = await systemManager.banUser(req.user.id, req.params.id);
 
     return res.status(200).json({
       success: true,
@@ -37,10 +23,7 @@ const AdminController = {
   },
 
   async unbanUser(req, res) {
-    const user = await systemManager.unbanUser(
-      req.user.id,
-      req.params.id
-    );
+    const user = await systemManager.unbanUser(req.user.id, req.params.id);
 
     return res.status(200).json({
       success: true,
@@ -48,15 +31,8 @@ const AdminController = {
     });
   },
 
-  // ======================================================
-  // CONTENT MODERATION
-  // ======================================================
-
   async deletePost(req, res) {
-    await systemManager.adminDeletePost(
-      req.user.id,
-      req.params.id
-    );
+    await systemManager.adminDeletePost(req.user.id, req.params.id);
 
     return res.status(200).json({
       success: true,
@@ -66,23 +42,10 @@ const AdminController = {
     });
   },
 
-  // ======================================================
-  // ANALYTICS
-  // ======================================================
-
   async getEventCounts(req, res) {
-    const {
-      from,
-      to,
-      groupBy,
-    } = req.query;
+    const {from, to, groupBy} = req.query;
 
-    const data =
-      await systemManager.getAnalyticsEventCounts({
-        from,
-        to,
-        groupBy,
-      });
+    const data = await systemManager.getAnalyticsEventCounts({from, to, groupBy});
 
     return res.status(200).json({
       success: true,
@@ -91,16 +54,9 @@ const AdminController = {
   },
 
   async getDailyActiveUsers(req, res) {
-    const {
-      from,
-      to,
-    } = req.query;
+    const {from, to} = req.query;
 
-    const data =
-      await systemManager.getAnalyticsDailyActiveUsers({
-        from,
-        to,
-      });
+    const data = await systemManager.getAnalyticsDailyActiveUsers({from, to});
 
     return res.status(200).json({
       success: true,
@@ -109,18 +65,9 @@ const AdminController = {
   },
 
   async getRecentEvents(req, res) {
-    const {
-      limit,
-      event,
-      userId,
-    } = req.query;
+    const {limit, event, userId} = req.query;
 
-    const data =
-      await systemManager.getAnalyticsRecentEvents({
-        limit,
-        event,
-        userId,
-      });
+    const data = await systemManager.getAnalyticsRecentEvents({limit, event, userId});
 
     return res.status(200).json({
       success: true,
@@ -128,25 +75,16 @@ const AdminController = {
     });
   },
 
-  // ======================================================
-  // NOTIFICATIONS
-  // ======================================================
 
   async broadcastNotification(req, res) {
-    const {
-      recipientIds,
-      title,
-      body,
-    } = req.body;
+    const {recipientIds, title, body} = req.body;
 
-    const sent =
-      await systemManager.sendSystemNotification(
-        req.user.id,
-        {
-          recipientIds,
-          title,
-          body,
-        }
+    const sent = await systemManager.sendSystemNotification(req.user.id,
+                                                            {
+                                                              recipientIds,
+                                                              title,
+                                                              body,
+                                                            }
       );
 
     return res.status(200).json({

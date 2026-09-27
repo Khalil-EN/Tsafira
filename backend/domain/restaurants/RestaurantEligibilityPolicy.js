@@ -3,10 +3,7 @@ class RestaurantEligibilityPolicy {
         this.numberOfPeople = numberOfPeople;
     }
 
-    isEligible(
-        restaurant,
-        { meal, maxCost } = {}
-    ) {
+    isEligible(restaurant, { meal, maxCost } = {}) {
         if (!restaurant) {
             return false;
         }
@@ -15,20 +12,12 @@ class RestaurantEligibilityPolicy {
             return false;
         }
 
-        const estimatedCost =
-            restaurant.getEstimatedMealCost(
-                this.numberOfPeople
-            );
+        const estimatedCost = restaurant.getEstimatedMealCost(this.numberOfPeople);
 
         if (estimatedCost === null) {
             return false;
         }
 
-        /*
-         * maxCost is intentionally NOT used as a hard constraint.
-         *
-         * RestaurantAssigner applies soft budget scoring instead.
-         */
         return true;
     }
 }

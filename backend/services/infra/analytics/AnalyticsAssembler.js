@@ -1,15 +1,10 @@
-const AnalyticsEventCountDTO =
-  require('./dto/AnalyticsEventCountDTO');
+const AnalyticsEventCountDTO = require('./dto/AnalyticsEventCountDTO');
 
-const AnalyticsDailyActiveUsersDTO =
-  require('./dto/AnalyticsDailyActiveUsersDTO');
+const AnalyticsDailyActiveUsersDTO = require('./dto/AnalyticsDailyActiveUsersDTO');
 
-const AnalyticsRecentEventDTO =
-  require('./dto/AnalyticsRecentEventDTO');
+const AnalyticsRecentEventDTO = require('./dto/AnalyticsRecentEventDTO');
 
 class AnalyticsAssembler {
-
-  // ── Event counts ────────────────────────────────────────────────
 
   static toEventCountDTO(item) {
     if (!item) {
@@ -23,12 +18,8 @@ class AnalyticsAssembler {
   }
 
   static toEventCountsDTO(items = []) {
-    return items
-      .map(item => AnalyticsAssembler.toEventCountDTO(item))
-      .filter(Boolean);
+    return items.map(item => AnalyticsAssembler.toEventCountDTO(item)).filter(Boolean);
   }
-
-  // ── Daily active users ─────────────────────────────────────────
 
   static toDailyActiveUsersDTO(item) {
     if (!item) {
@@ -42,33 +33,24 @@ class AnalyticsAssembler {
   }
 
   static toDailyActiveUsersDTOs(items = []) {
-    return items
-      .map(item => AnalyticsAssembler.toDailyActiveUsersDTO(item))
-      .filter(Boolean);
+    return items.map(item => AnalyticsAssembler.toDailyActiveUsersDTO(item)).filter(Boolean);
   }
-
-  // ── Recent events ──────────────────────────────────────────────
 
   static toRecentEventDTO(item) {
     if (!item) {
       return null;
     }
 
-    const populatedUser = item.userId && typeof item.userId === 'object'
-      ? item.userId
-      : null;
+    const populatedUser = item.userId && typeof item.userId === 'object' ? item.userId : null;
 
-    const userId = populatedUser
-      ? populatedUser._id?.toString()
-      : item.userId?.toString?.() ?? item.userId ?? null;
+    const userId = populatedUser ? populatedUser._id?.toString() : item.userId?.toString?.() ?? item.userId ?? null;
 
-    const user = populatedUser
-      ? {
-          id: populatedUser._id?.toString(),
-          firstName: populatedUser.firstName,
-          lastName: populatedUser.lastName,
-          email: populatedUser.email,
-        }
+    const user = populatedUser ? {
+              id: populatedUser._id?.toString(),
+              firstName: populatedUser.firstName,
+              lastName: populatedUser.lastName,
+              email: populatedUser.email,
+            }
       : null;
 
     return new AnalyticsRecentEventDTO({
@@ -84,9 +66,7 @@ class AnalyticsAssembler {
   }
 
   static toRecentEventsDTO(items = []) {
-    return items
-      .map(item => AnalyticsAssembler.toRecentEventDTO(item))
-      .filter(Boolean);
+    return items.map(item => AnalyticsAssembler.toRecentEventDTO(item)).filter(Boolean);
   }
 }
 

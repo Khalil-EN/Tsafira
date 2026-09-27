@@ -1,21 +1,11 @@
-const systemManager =
-    require("../../system/SystemManager");
+const systemManager = require("../../system/SystemManager");
 
 const ItineraryController = {
 
     async generateSuggested(req, res) {
 
-        const suggestedPlan =
-            await systemManager.generateSuggestedItinerary(
-                req.user.id,
-                req.body
-            );
+        const suggestedPlan = await systemManager.generateSuggestedItinerary(req.user.id, req.body);
 
-
-        /*
-         * The service currently returns null/undefined
-         * when the daily suggestion limit is reached.
-         */
         if (!suggestedPlan) {
 
             return res.status(429).json({

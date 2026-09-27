@@ -1,14 +1,9 @@
-const {
-    ValidationError,
-} = require("../../../../exceptions");
+const { ValidationError } = require("../../../../exceptions");
 
 function validateCreatePost(req, res, next) {
     const { text } = req.body;
 
-    if (
-        typeof text !== "string" ||
-        text.trim().length === 0
-    ) {
+    if (typeof text !== "string" || text.trim().length === 0) {
         throw new ValidationError(
             "Post text is required."
         );

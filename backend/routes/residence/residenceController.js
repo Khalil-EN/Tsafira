@@ -1,12 +1,10 @@
-const systemManager =
-    require("../../system/SystemManager");
+const systemManager = require("../../system/SystemManager");
 
 const ResidenceController = {
 
     async getAll(req, res) {
 
-        const residences =
-            await systemManager.getAllResidences();
+        const residences = await systemManager.getAllResidences();
 
         return res.status(200).json({
             success: true,

@@ -26,6 +26,6 @@ module.exports = {
       typeof val === 'string' && val.trim().length > 0,
 
     isValidCountry: (country) =>
-      typeof country === 'string' && country.length >= 2, // could be ISO 2-letter or name
+      typeof country === 'string' && country.length >= 2,
   }
 };

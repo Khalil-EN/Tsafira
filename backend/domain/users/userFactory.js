@@ -1,13 +1,7 @@
 const BaseUser = require('./basicUser');
-
-const FreemiumUser =
-  require('./freemiumUser');
-
-const PremiumUser =
-  require('./premiumUser');
-
-const AdminUser =
-  require('./adminUser');
+const FreemiumUser = require('./freemiumUser');
+const PremiumUser = require('./premiumUser');
+const AdminUser = require('./adminUser');
 
 
 function userFactory(userData) {

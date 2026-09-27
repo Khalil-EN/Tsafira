@@ -19,7 +19,6 @@ class Location {
   getCoordinates()       { return { lat: this.latitude, lng: this.longitude }; }
   getCoordinatesString() { return `${this.latitude},${this.longitude}`; }
 
-  /** Great-circle distance in km to another Location instance. */
   calculateDistance(other) {
     return Location.distanceBetween(this, other);
   }
@@ -28,10 +27,6 @@ class Location {
     return this.calculateDistance(other) <= maxKm;
   }
 
-  /**
-   * Static convenience — accepts any object with latitude/longitude.
-   * Used by strategies so they don't need to construct Location instances.
-   */
   static distanceBetween(a, b) {
     const toRad = v => (v * Math.PI) / 180;
     const R     = 6371;

@@ -2,14 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const asyncHandler =
-  require("../../../../middlewares/asyncHandler");
+const asyncHandler = require("../../../../middlewares/asyncHandler");
 
-const socialAuth =
-  require("../../socialAuth");
+const socialAuth = require("../../socialAuth");
 
-const PostController =
-  require("./postController");
+const PostController = require("./postController");
 
 const {
   validateCreatePost,
@@ -17,10 +14,6 @@ const {
 } = require("./postValidator");
 
 router.use(socialAuth);
-
-// ============================================================
-// CREATE POST
-// ============================================================
 
 router.post(
   "/",
@@ -30,9 +23,6 @@ router.post(
   )
 );
 
-// ============================================================
-// GET SINGLE POST
-// ============================================================
 
 router.get(
   "/:id",
@@ -42,10 +32,6 @@ router.get(
   )
 );
 
-// ============================================================
-// LIKE / UNLIKE
-// ============================================================
-
 router.post(
   "/:id/like",
   validatePostId,
@@ -53,10 +39,6 @@ router.post(
     PostController.likePost
   )
 );
-
-// ============================================================
-// DELETE
-// ============================================================
 
 router.delete(
   "/:id",
@@ -66,10 +48,6 @@ router.delete(
   )
 );
 
-// ============================================================
-// COMMENTS
-// ============================================================
-
 router.get(
   "/:id/comments",
   validatePostId,
@@ -78,8 +56,21 @@ router.get(
   )
 );
 
-router.put("/:id", validatePostId, asyncHandler(PostController.updatePost));
-router.delete("/:id", validatePostId, asyncHandler(PostController.deletePost));
+router.put(
+  "/:id",
+  validatePostId,
+  asyncHandler(
+    PostController.updatePost
+  )
+);
+
+router.delete(
+  "/:id",
+  validatePostId,
+  asyncHandler(
+    PostController.deletePost
+  )
+);
 
 
 module.exports = router;

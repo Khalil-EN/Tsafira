@@ -33,7 +33,6 @@ const ResidenceDAO = {
 
     for (const key in filters) {
       if (Array.isArray(filters[key])) {
-        // e.g., activitytype: ['museum', 'beach']
         const placeholders = filters[key].map(() => `$${i++}`).join(', ');
         conditions.push(`${key} IN (${placeholders})`);
         values.push(...filters[key]);

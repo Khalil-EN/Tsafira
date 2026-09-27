@@ -34,82 +34,31 @@ class BaseUser {
   }) {
 
     this.id = id;
-
-    this.firstName =
-      BaseUser.normalizeName(firstName);
-
-    this.lastName =
-      BaseUser.normalizeName(lastName);
-
-    this.email =
-      BaseUser.normalizeEmail(email);
-
-    this.phoneNumber =
-      BaseUser.normalizePhoneNumber(phoneNumber);
-
-    this.birthDate =
-      new Date(birthDate);
-
-    this.passwordHash =
-      passwordHash;
-
-    this.profilePicture =
-      profilePicture || 'avatar_01';
-
-    this.location =
-      location;
-
-    this.lastLoginDate =
-      lastLoginDate
-        ? new Date(lastLoginDate)
-        : null;
-
-    this.status =
-      status;
-
-    this.role =
-      role;
-
-    this.isActive =
-      isActive;
-
-    this.friends =
-      friends;
-
-    this.communities =
-      communities;
-
-    this.suggestionCountToday =
-      suggestionCountToday;
-
-    this.lastSuggestionDate =
-      lastSuggestionDate;
-
-    this.createdAt =
-      new Date(createdAt);
-
-    this.emailVerified =
-      emailVerified;
-
-    this.emailVerificationCode =
-      emailVerificationCode;
-
-    this.emailVerificationExpiresAt =
-      emailVerificationExpiresAt;
-
-    this.refreshToken =
-      refreshToken;
-
-    this.fcmToken =
-      fcmToken;
-
-    this.postsCount =
-      postsCount;
+    this.firstName = BaseUser.normalizeName(firstName);
+    this.lastName = BaseUser.normalizeName(lastName);
+    this.email = BaseUser.normalizeEmail(email);
+    this.phoneNumber = BaseUser.normalizePhoneNumber(phoneNumber);
+    this.birthDate = new Date(birthDate);
+    this.passwordHash = passwordHash;
+    this.profilePicture = profilePicture || 'avatar_01';
+    this.location = location;
+    this.lastLoginDate = lastLoginDate ? new Date(lastLoginDate) : null;
+    this.status = status;
+    this.role = role;
+    this.isActive = isActive;
+    this.friends = friends;
+    this.communities = communities;
+    this.suggestionCountToday = suggestionCountToday;
+    this.lastSuggestionDate = lastSuggestionDate;
+    this.createdAt = new Date(createdAt);
+    this.emailVerified = emailVerified;
+    this.emailVerificationCode = emailVerificationCode;
+    this.emailVerificationExpiresAt = emailVerificationExpiresAt;
+    this.refreshToken = refreshToken;
+    this.fcmToken = fcmToken;
+    this.postsCount = postsCount;
   }
 
-  // ============================================================
-  // Domain normalization
-  // ============================================================
 
   static normalizeName(value) {
     if (typeof value !== 'string') {
@@ -128,24 +77,14 @@ class BaseUser {
   }
 
   static normalizePhoneNumber(value) {
-    if (
-      value === null ||
-      value === undefined ||
-      typeof value !== 'string'
-    ) {
+    if (value === null || value === undefined || typeof value !== 'string') {
       return null;
     }
 
     const normalized = value.trim();
 
-    return normalized === ''
-      ? null
-      : normalized;
+    return normalized === '' ? null : normalized;
   }
-
-  // ============================================================
-  // Domain behavior
-  // ============================================================
 
   getFullName() {
     return `${this.firstName} ${this.lastName}`;
@@ -154,23 +93,11 @@ class BaseUser {
   getAge() {
     const now = new Date();
 
-    const age =
-      now.getFullYear() -
-      this.birthDate.getFullYear();
+    const age = now.getFullYear() - this.birthDate.getFullYear();
 
-    const m =
-      now.getMonth() -
-      this.birthDate.getMonth();
+    const m = now.getMonth() - this.birthDate.getMonth();
 
-    return (
-      m < 0 ||
-      (
-        m === 0 &&
-        now.getDate() < this.birthDate.getDate()
-      )
-    )
-      ? age - 1
-      : age;
+    return (m < 0 || (m === 0 && now.getDate() < this.birthDate.getDate())) ? age - 1 : age;
   }
 
   updateLastLogin() {

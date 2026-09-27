@@ -2,9 +2,6 @@ import '../api_response.dart';
 import '../http_client.dart';
 
 class ItineraryService {
-  // ============================================================
-  // GENERATE SUGGESTED ITINERARY
-  // ============================================================
 
   static Future<Map<String, dynamic>> generateSuggested(
       Map<String, dynamic> itineraryData,

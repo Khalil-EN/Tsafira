@@ -2,14 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const asyncHandler =
-  require("../../../middlewares/asyncHandler");
+const asyncHandler = require("../../../middlewares/asyncHandler");
 
-const socialAuth =
-  require("../socialAuth");
+const socialAuth = require("../socialAuth");
 
-const MessagingController =
-  require("./messagingController");
+const MessagingController = require("./messagingController");
 
 const {
   validateParticipant,
@@ -19,7 +16,6 @@ const {
 
 router.use(socialAuth);
 
-// GET /chats
 router.get(
   "/chats",
   asyncHandler(
@@ -27,7 +23,6 @@ router.get(
   )
 );
 
-// POST /chats
 router.post(
   "/chats",
   validateParticipant,
@@ -36,7 +31,6 @@ router.post(
   )
 );
 
-// GET /chats/:conversationId/messages
 router.get(
   "/chats/:conversationId/messages",
   validateConversationId,
@@ -45,7 +39,6 @@ router.get(
   )
 );
 
-// POST /chats/:conversationId/read
 router.post(
   "/chats/:conversationId/read",
   validateConversationId,
@@ -54,7 +47,6 @@ router.post(
   )
 );
 
-// POST /messages
 router.post(
   "/messages",
   validateSendMessage,

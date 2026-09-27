@@ -1,10 +1,7 @@
-const OllamaService =
-  require("./OllamaService");
+const OllamaService = require("./OllamaService");
 
 
-const CLASSIFIER_MODEL =
-  process.env.AI_CLASSIFIER_MODEL ||
-  "qwen2.5:3b";
+const CLASSIFIER_MODEL = process.env.AI_CLASSIFIER_MODEL || "qwen2.5:3b";
 
 
 const CLASSIFICATION_SCHEMA = {
@@ -117,81 +114,30 @@ const AIRelevanceService = {
 
   async classify(content) {
 
-    if (
-      !content ||
-      !content.trim()
-    ) {
+    if (!content || !content.trim()) {
       return "UNRELATED";
     }
 
-
     try {
-
-      const response =
-        await OllamaService.chat({
-
-          model:
-            CLASSIFIER_MODEL,
-
-          system:
-            RELEVANCE_PROMPT,
-
-          messages: [
-            {
-              role: "user",
-
-              content:
-                content.trim(),
-            },
-          ],
-
-          options: {
-            temperature: 0,
-          },
-
-          format:
-            CLASSIFICATION_SCHEMA,
+      const response = await OllamaService.chat({model: CLASSIFIER_MODEL, system: RELEVANCE_PROMPT,
+                                                messages: [{role: "user", content: content.trim(),},],
+                                                options: {temperature: 0}, format: CLASSIFICATION_SCHEMA,
 
         });
 
-
-      console.log(
-        `[CLASSIFIER RAW] ${response}`
-      );
-
-
-      const parsed =
-        JSON.parse(response);
-
-
-      const category =
-        parsed.category;
-
-
-      if (
-        category === "APP" ||
-        category === "TRAVEL" ||
-        category === "UNRELATED"
-      ) {
+      const parsed = JSON.parse(response);
+      const category = parsed.category;
+      if (category === "APP" || category === "TRAVEL" || category === "UNRELATED") {
 
         return category;
       }
-
-
-      console.warn(
-        `[AI] Invalid classifier category: ${category}`
-      );
+      console.warn(`[AI] Invalid classifier category: ${category}`);
 
 
       return "UNRELATED";
 
     } catch (error) {
-
-      console.error(
-        "[AI] Relevance classification failed:",
-        error
-      );
-
+      console.error("[AI] Relevance classification failed:", error);
 
       return "UNRELATED";
     }
@@ -200,19 +146,12 @@ const AIRelevanceService = {
 
   async isRelevant(content) {
 
-    const category =
-      await this.classify(
-        content
-      );
+    const category =await this.classify(content);
 
 
-    return (
-      category === "APP" ||
-      category === "TRAVEL"
-    );
+    return (category === "APP" || category === "TRAVEL");
   },
 };
 
 
-module.exports =
-  AIRelevanceService;
+module.exports = AIRelevanceService;

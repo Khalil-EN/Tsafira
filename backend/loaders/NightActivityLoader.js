@@ -1,10 +1,7 @@
 const fs = require("fs/promises");
 const path = require("path");
 
-const NIGHT_ACTIVITIES_FILE = path.join(
-    __dirname,
-    "../data/nightActivities.json"
-);
+const NIGHT_ACTIVITIES_FILE = path.join(__dirname, "../data/nightActivities.json");
 
 const NightActivityLoader = {
     async load() {

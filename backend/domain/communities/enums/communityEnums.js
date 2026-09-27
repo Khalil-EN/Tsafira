@@ -1,6 +1,3 @@
-/**
- * Community domain enumerations.
- */
 
 const MemberRole = Object.freeze({
   OWNER:     'owner',

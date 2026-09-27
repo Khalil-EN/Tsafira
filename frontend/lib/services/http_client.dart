@@ -156,7 +156,6 @@ class TokenManager {
   }
 }
 
-// Fixed: added patch to the enum
 enum HttpMethod { get, post, put, patch, delete }
 
 class HttpException implements Exception {

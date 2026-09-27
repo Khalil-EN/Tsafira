@@ -7,19 +7,10 @@ class BudgetAllocation {
         transportPercentage = 0.10,
     }) {
         this.totalBudget = totalBudget;
-
-        this.accommodationPercentage =
-            accommodationPercentage;
-
-        this.foodPercentage =
-            foodPercentage;
-
-        this.activitiesPercentage =
-            activitiesPercentage;
-
-        this.transportPercentage =
-            transportPercentage;
-
+        this.accommodationPercentage = accommodationPercentage;
+        this.foodPercentage = foodPercentage;
+        this.activitiesPercentage = activitiesPercentage;
+        this.transportPercentage = transportPercentage;
         this._validatePercentages();
     }
 
@@ -38,31 +29,19 @@ class BudgetAllocation {
     }
 
     getAccommodationBudget() {
-        return (
-            this.totalBudget *
-            this.accommodationPercentage
-        );
+        return (this.totalBudget * this.accommodationPercentage);
     }
 
     getFoodBudget() {
-        return (
-            this.totalBudget *
-            this.foodPercentage
-        );
+        return (this.totalBudget * this.foodPercentage);
     }
 
     getActivitiesBudget() {
-        return (
-            this.totalBudget *
-            this.activitiesPercentage
-        );
+        return (this.totalBudget * this.activitiesPercentage);
     }
 
     getTransportBudget() {
-        return (
-            this.totalBudget *
-            this.transportPercentage
-        );
+        return (this.totalBudget * this.transportPercentage);
     }
 
     getFoodBudgetPerDay(days) {

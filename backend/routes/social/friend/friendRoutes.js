@@ -2,14 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const asyncHandler =
-    require("../../../middlewares/asyncHandler");
+const asyncHandler = require("../../../middlewares/asyncHandler");
 
-const socialAuth =
-    require("../socialAuth");
+const socialAuth = require("../socialAuth");
 
-const FriendController =
-    require("./friendController");
+const FriendController = require("./friendController");
 
 const {
     validateSendFriendRequest,
@@ -17,7 +14,6 @@ const {
 
 router.use(socialAuth);
 
-// POST /friends/request
 router.post(
     "/request",
     validateSendFriendRequest,
@@ -26,7 +22,6 @@ router.post(
     )
 );
 
-// GET /friends
 router.get(
     "/",
     asyncHandler(

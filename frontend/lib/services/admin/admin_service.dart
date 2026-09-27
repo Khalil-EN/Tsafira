@@ -2,9 +2,6 @@ import '../api_response.dart';
 import '../http_client.dart';
 
 class AdminService {
-  // ============================================================
-  // USERS
-  // ============================================================
 
   static Future<Map<String, dynamic>> getUsers({
     int page = 1,
@@ -40,10 +37,6 @@ class AdminService {
     );
   }
 
-  // ============================================================
-  // CONTENT
-  // ============================================================
-
   static Future<void> deletePost(
       String postId,
       ) async {
@@ -52,10 +45,6 @@ class AdminService {
       endpoint: 'admin/posts/$postId',
     );
   }
-
-  // ============================================================
-  // ANALYTICS
-  // ============================================================
 
   static Future<List<dynamic>> getEventCounts({
     String? from,
@@ -133,10 +122,6 @@ class AdminService {
 
     return ApiResponse.decodeList(response.body);
   }
-
-  // ============================================================
-  // BROADCAST NOTIFICATION
-  // ============================================================
 
   static Future<int> broadcastNotification({
     required dynamic recipientIds,

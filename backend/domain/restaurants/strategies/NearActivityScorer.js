@@ -1,23 +1,14 @@
-const RestaurantScorer =
-    require('./RestaurantScorer');
+const RestaurantScorer = require('./RestaurantScorer');
 
-const Location =
-    require('../../locations/Location');
+const Location = require('../../locations/location');
 
-class NearActivityScorer
-    extends RestaurantScorer {
+class NearActivityScorer extends RestaurantScorer {
 
-    constructor({
-        cuisineTags = [],
-        facilities = [],
-    } = {}) {
+    constructor({cuisineTags = [], facilities = [],} = {}) {
         super();
 
-        this.cuisineTags =
-            cuisineTags;
-
-        this.facilities =
-            facilities;
+        this.cuisineTags = cuisineTags;
+        this.facilities = facilities;
     }
 
     score(restaurant, activity) {
@@ -25,14 +16,9 @@ class NearActivityScorer
             return -Infinity;
         }
 
-        let score =
-            this._baseScore(restaurant);
+        let score = this._baseScore(restaurant);
 
-        const distance =
-            Location.distanceBetween(
-                restaurant,
-                activity
-            );
+        const distance = Location.distanceBetween(restaurant,activity);
 
         if (distance < 1) {
             score += 20;
@@ -54,29 +40,18 @@ class NearActivityScorer
             }
         }
 
-        for (
-            const facility of this.facilities
-        ) {
-            if (
-                restaurant.hasFacility(
-                    facility
-                )
-            ) {
+        for (const facility of this.facilities) {
+            if (restaurant.hasFacility(facility)) {
                 score += 5;
             }
         }
 
-        score +=
-            (restaurant.numberOfReviews || 0) *
-            0.01;
+        score +=(restaurant.numberOfReviews || 0) * 0.01;
 
-        score +=
-            (restaurant.rating || 0) *
-            10;
+        score += (restaurant.rating || 0) * 10;
 
         return score;
     }
 }
 
-module.exports =
-    NearActivityScorer;
+module.exports = NearActivityScorer;

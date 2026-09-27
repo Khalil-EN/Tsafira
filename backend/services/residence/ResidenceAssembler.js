@@ -9,40 +9,16 @@ class ResidenceAssembler {
         }
 
         return new ResidenceDTO({
-
-            id:
-                residence.id,
-
-            name:
-                residence.name,
-
-            description:
-                residence.description,
-
-            location:
-                residence.address,
-
-            price:
-                residence.pricerange,
-
-            rating:
-                residence.rating,
-
-            reviews:
-                residence.numberofreviews,
-
-            imageurl:
-                residence.image,
-
-            detailimages:
-                ResidenceAssembler.toArray(
-                    residence.secondary_images
-                ),
-
-            amenities:
-                ResidenceAssembler.toArray(
-                    residence.amenities
-                ),
+            id: residence.id,
+            name: residence.name,
+            description: residence.description,
+            location: residence.address,
+            price: residence.pricerange,
+            rating: residence.rating,
+            reviews: residence.numberofreviews,
+            imageurl: residence.image,
+            detailimages:ResidenceAssembler.toArray(residence.secondary_images),
+            amenities: ResidenceAssembler.toArray(residence.amenities),
 
         });
     }
@@ -61,9 +37,7 @@ class ResidenceAssembler {
             } catch {
 
                 try {
-                    return JSON.parse(
-                        value.replace(/'/g, '"')
-                    );
+                    return JSON.parse(value.replace(/'/g, '"'));
                 } catch {
                     return [];
                 }

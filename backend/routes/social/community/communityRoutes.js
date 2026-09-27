@@ -2,14 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const asyncHandler =
-    require("../../../middlewares/asyncHandler");
+const asyncHandler = require("../../../middlewares/asyncHandler");
 
-const socialAuth =
-    require("../socialAuth");
+const socialAuth = require("../socialAuth");
 
-const CommunityController =
-    require("./communityController");
+const CommunityController = require("./communityController");
 
 const {
     validateCreateCommunity,
@@ -19,7 +16,6 @@ const {
 
 router.use(socialAuth);
 
-// POST /communities
 router.post(
     "/",
     validateCreateCommunity,
@@ -28,7 +24,6 @@ router.post(
     )
 );
 
-// GET /communities
 router.get(
     "/",
     asyncHandler(
@@ -36,7 +31,6 @@ router.get(
     )
 );
 
-// GET /communities/mine
 router.get(
     "/mine",
     asyncHandler(
@@ -44,7 +38,6 @@ router.get(
     )
 );
 
-// GET /communities/:id
 router.get(
     "/:id",
     validateCommunityId,
@@ -53,7 +46,6 @@ router.get(
     )
 );
 
-// PUT /communities/:id
 router.put(
     "/:id",
     validateCommunityId,
@@ -62,7 +54,6 @@ router.put(
     )
 );
 
-// DELETE /communities/:id
 router.delete(
     "/:id",
     validateCommunityId,
@@ -71,7 +62,6 @@ router.delete(
     )
 );
 
-// POST /communities/:id/join
 router.post(
     "/:id/join",
     validateCommunityId,
@@ -80,7 +70,6 @@ router.post(
     )
 );
 
-// GET /communities/:id/members
 router.get(
     "/:id/members",
     validateCommunityId,
@@ -89,7 +78,6 @@ router.get(
     )
 );
 
-// POST /communities/:id/members/:userId/approve
 router.post(
     "/:id/members/:userId/approve",
     validateCommunityId,
@@ -98,14 +86,12 @@ router.post(
     )
 );
 
-// GET /communities/:id/requests
 router.get(
     "/:id/requests",
     validateCommunityId,
     asyncHandler(CommunityController.getPendingRequests)
 );
 
-// POST /communities/:id/members/:userId/reject
 router.post(
     "/:id/members/:userId/reject",
     validateCommunityId,
@@ -118,14 +104,12 @@ router.get(
     asyncHandler(CommunityController.getCommunityFeed)
 );
 
-// POST /communities/:id/members/:userId/promote  { role: "moderator" | "admin" | "member" }
 router.post(
     "/:id/members/:userId/promote",
     validateCommunityId,
     asyncHandler(CommunityController.promoteMember)
 );
 
-// POST /communities/:id/members/:userId/ban
 router.post(
     "/:id/members/:userId/ban",
     validateCommunityId,

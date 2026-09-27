@@ -1,6 +1,3 @@
-/**
- * Itinerary domain enumerations.
- */
 
 const ItinerarySuggestionType = Object.freeze({
   GENERATED: 'generated',

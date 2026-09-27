@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const asyncHandler = require("../../middlewares/asyncHandler");
+
 const {
   authenticateToken,
 } = require("../../middlewares/authMiddleware");
@@ -18,9 +19,6 @@ const {
 
 const authController = require("./authController");
 
-// ======================================================
-// REGISTER
-// ======================================================
 
 router.post(
   "/register",
@@ -28,9 +26,6 @@ router.post(
   asyncHandler(authController.register)
 );
 
-// ======================================================
-// LOGIN
-// ======================================================
 
 router.post(
   "/login",
@@ -38,9 +33,6 @@ router.post(
   asyncHandler(authController.login)
 );
 
-// ======================================================
-// REFRESH TOKEN
-// ======================================================
 
 router.post(
   "/refresh",
@@ -48,9 +40,6 @@ router.post(
   asyncHandler(authController.refresh)
 );
 
-// ======================================================
-// LOGOUT
-// ======================================================
 
 router.post(
   "/logout",
@@ -58,9 +47,6 @@ router.post(
   asyncHandler(authController.logout)
 );
 
-// ======================================================
-// SEND VERIFICATION CODE
-// ======================================================
 
 router.post(
     "/send-verification",
@@ -68,9 +54,6 @@ router.post(
     asyncHandler(authController.sendVerificationCode)
 );
 
-// ======================================================
-// VERIFY EMAIL
-// ======================================================
 
 router.post(
     "/verify-email",
@@ -78,18 +61,12 @@ router.post(
     asyncHandler(authController.verifyEmail)
 );
 
-// ======================================================
-// RESEND VERIFICATION CODE
-// ======================================================
 
 router.post(
     "/resend-verification",
     validateResendVerificationCode,
     asyncHandler(authController.resendVerificationCode)
 );
-// ======================================================
-// CURRENT USER
-// ======================================================
 
 router.get(
   "/me",

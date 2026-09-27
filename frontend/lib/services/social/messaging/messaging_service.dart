@@ -3,10 +3,6 @@ import '../../http_client.dart';
 
 class MessagingService {
 
-  // ============================================================
-  // INBOX
-  // ============================================================
-
   static Future<List<Map<String, dynamic>>> getChats({
     int page = 1,
     int limit = 20,
@@ -27,10 +23,6 @@ class MessagingService {
         .toList();
   }
 
-  // ============================================================
-  // GET OR CREATE DIRECT CHAT
-  // ============================================================
-
   static Future<Map<String, dynamic>>
   getOrCreateDirectChat(
       String participantId,
@@ -47,10 +39,6 @@ class MessagingService {
       response.body,
     );
   }
-
-  // ============================================================
-  // MESSAGES
-  // ============================================================
 
   static Future<List<Map<String, dynamic>>> getMessages({
     required String conversationId,
@@ -74,10 +62,6 @@ class MessagingService {
         .toList();
   }
 
-  // ============================================================
-  // MARK CONVERSATION AS READ
-  // ============================================================
-
   static Future<void> markConversationAsRead(
       String conversationId,
       ) async {
@@ -87,10 +71,6 @@ class MessagingService {
       'chats/$conversationId/read',
     );
   }
-
-  // ============================================================
-  // SEND MESSAGE
-  // ============================================================
 
   static Future<Map<String, dynamic>> sendMessage({
     required String conversationId,

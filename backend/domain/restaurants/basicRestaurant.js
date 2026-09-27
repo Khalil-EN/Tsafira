@@ -28,41 +28,27 @@ class Restaurant {
 
         this.priceLevel = priceLevel ?? null;
 
-        this.rating = Number.isFinite(Number(rating))
-            ? Number(rating)
-            : 0;
+        this.rating = Number.isFinite(Number(rating)) ? Number(rating) : 0;
 
-        this.numberOfReviews = Number.isFinite(Number(numberOfReviews))
-            ? Number(numberOfReviews)
-            : 0;
+        this.numberOfReviews = Number.isFinite(Number(numberOfReviews)) ? Number(numberOfReviews) : 0;
 
         this.openingHours = openingHours ?? null;
         this.contactInfo = contactInfo ?? null;
 
         this.image = image ?? null;
 
-        this.images = Array.isArray(images)
-            ? images
-            : [];
+        this.images = Array.isArray(images) ? images : [];
 
         this.longitude = longitude ?? null;
         this.latitude = latitude ?? null;
 
-        this.cuisines = Array.isArray(cuisines)
-            ? cuisines
-            : [];
+        this.cuisines = Array.isArray(cuisines) ? cuisines : [];
 
-        this.facilities = Array.isArray(facilities)
-            ? facilities
-            : [];
+        this.facilities = Array.isArray(facilities) ? facilities : [];
 
-        this.meals = Array.isArray(meals)
-            ? meals.map(meal => String(meal).toLowerCase())
-            : [];
+        this.meals = Array.isArray(meals) ? meals.map(meal => String(meal).toLowerCase()) : [];
 
-        this.tags = Array.isArray(tags)
-            ? tags
-            : [];
+        this.tags = Array.isArray(tags) ? tags : [];
     }
 
     getCoordinates() {
@@ -72,21 +58,10 @@ class Restaurant {
         };
     }
 
-    /**
-     * Returns the estimated price PER PERSON.
-     *
-     * Example:
-     * "$$" -> 100
-     * "$$-$$$" -> 150
-     */
     getPricePerPerson() {
         return PriceLevelEnum.toNumeric(this.priceLevel);
     }
 
-    /**
-     * Returns estimated total restaurant cost
-     * for the whole group.
-     */
     getEstimatedMealCost(numberOfPeople) {
         const pricePerPerson = this.getPricePerPerson();
 
@@ -117,10 +92,7 @@ class Restaurant {
         }
 
         return this.tags.some(
-            item =>
-                typeof item === 'string' &&
-                item.toLowerCase() === tag.toLowerCase()
-        );
+            item => typeof item === 'string' && item.toLowerCase() === tag.toLowerCase());
     }
 
     hasFacility(facility) {
@@ -129,10 +101,7 @@ class Restaurant {
         }
 
         return this.facilities.some(
-            item =>
-                typeof item === 'string' &&
-                item.toLowerCase() === facility.toLowerCase()
-        );
+            item => typeof item === 'string' && item.toLowerCase() === facility.toLowerCase());
     }
 
     isValidLocation() {
@@ -173,20 +142,13 @@ class Restaurant {
             return [];
         }
 
-        return cuisines
-            .filter(item => typeof item === 'string')
-            .map(item =>
-                item
-                    .split(' ')[0]
-                    .toLowerCase()
+        return cuisines.filter(item => typeof item === 'string')
+                        .map(item => item.split(' ')[0].toLowerCase()
             );
     }
 
     static fromPriceRange(minPrice, maxPrice) {
-        return PriceLevelEnum.fromRange(
-            minPrice,
-            maxPrice
-        );
+        return PriceLevelEnum.fromRange(minPrice, maxPrice);
     }
 }
 

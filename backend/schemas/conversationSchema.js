@@ -44,23 +44,11 @@ const conversationSchema = new mongoose.Schema(
       default: Date.now,
     },
 
-    /*
-     * User who sent the current last message.
-     */
     lastMessageSender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
     },
-
-    /*
-     * Users who have read the current last message.
-     *
-     * Whenever a new message is sent, this is reset to [sender].
-     *
-     * When another participant opens the conversation,
-     * their ID is added here.
-     */
     lastMessageReadBy: {
       type: [
         {

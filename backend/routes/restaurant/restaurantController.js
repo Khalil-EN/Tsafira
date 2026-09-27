@@ -1,12 +1,10 @@
-const systemManager =
-    require("../../system/SystemManager");
+const systemManager = require("../../system/SystemManager");
 
 const RestaurantController = {
 
     async getAll(req, res) {
 
-        const restaurants =
-            await systemManager.getAllRestaurants();
+        const restaurants = await systemManager.getAllRestaurants();
 
 
         return res.status(200).json({

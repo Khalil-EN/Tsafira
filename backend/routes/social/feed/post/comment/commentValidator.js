@@ -1,29 +1,16 @@
-const {
-    ValidationError,
-} = require("../../../../../exceptions");
+const { ValidationError } = require("../../../../../exceptions");
 
 function validateCreateComment(req, res, next) {
 
-    const {
-        postId,
-        text,
-        parentCommentId,
-    } = req.body;
+    const {postId, text, parentCommentId} = req.body;
 
-    if (
-        !postId ||
-        typeof postId !== "string" ||
-        postId.trim().length === 0
-    ) {
+    if (!postId || typeof postId !== "string" || postId.trim().length === 0) {
         throw new ValidationError(
             "postId is required."
         );
     }
 
-    if (
-        typeof text !== "string" ||
-        text.trim().length === 0
-    ) {
+    if (typeof text !== "string" || text.trim().length === 0) {
         throw new ValidationError(
             "Comment content is required."
         );
@@ -35,14 +22,8 @@ function validateCreateComment(req, res, next) {
         );
     }
 
-    if (
-        parentCommentId !== undefined &&
-        parentCommentId !== null &&
-        (
-            typeof parentCommentId !== "string" ||
-            parentCommentId.trim().length === 0
-        )
-    ) {
+    if (parentCommentId !== undefined && parentCommentId !== null &&
+        (typeof parentCommentId !== "string" || parentCommentId.trim().length === 0)) {
         throw new ValidationError(
             "parentCommentId must be a valid comment id."
         );
@@ -53,11 +34,7 @@ function validateCreateComment(req, res, next) {
 
 function validateCommentId(req, res, next) {
 
-    if (
-        !req.params.id ||
-        typeof req.params.id !== "string" ||
-        req.params.id.trim().length === 0
-    ) {
+    if (!req.params.id || typeof req.params.id !== "string" || req.params.id.trim().length === 0) {
         throw new ValidationError(
             "Comment id is required."
         );

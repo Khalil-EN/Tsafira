@@ -4,32 +4,18 @@ const PlanAssembler = require('./PlanAssembler');
 
 const PlanService = {
 
-  // ============================================================
-  // API / PERSISTENCE OPERATIONS
-  // ============================================================
-
   async createPlan(input) {
     let data = { ...input };
 
-    // Automatically determine the next day number.
     if (!data.dayNumber && data.itineraryId) {
-      const existing = await PlanDAO.getByItineraryId(
-        data.itineraryId
-      );
-
+      const existing = await PlanDAO.getByItineraryId(data.itineraryId);
       data.dayNumber = existing.length + 1;
     }
 
-    // Raw input -> domain object
     const plan = PlanFactory.create(data);
-
-    // Domain object -> persistence representation
     const saved = await PlanDAO.create(plan.toJSON());
-
-    // Reconstruct domain object from persisted data
     const persistedPlan = PlanFactory.create(saved);
 
-    // Domain object -> API DTO
     return PlanAssembler.toDTO(persistedPlan);
   },
 
@@ -46,13 +32,9 @@ const PlanService = {
   },
 
   async getPlansByItinerary(itineraryId) {
-    const rawPlans = await PlanDAO.getByItineraryId(
-      itineraryId
-    );
+    const rawPlans = await PlanDAO.getByItineraryId(itineraryId);
 
-    const plans = rawPlans.map(raw =>
-      PlanFactory.create(raw)
-    );
+    const plans = rawPlans.map(raw => PlanFactory.create(raw));
 
     return PlanAssembler.toDTOList(plans);
   },
@@ -68,10 +50,7 @@ const PlanService = {
       existing.setNote(updates.note);
     }
 
-    const saved = await PlanDAO.update(
-      planId,
-      existing.toJSON()
-    );
+    const saved = await PlanDAO.update(planId, existing.toJSON());
 
     if (!saved) {
       return null;
@@ -85,10 +64,6 @@ const PlanService = {
   async deletePlan(planId) {
     return await PlanDAO.delete(planId);
   },
-
-  // ============================================================
-  // INTERNAL DOMAIN OPERATIONS
-  // ============================================================
 
   async _getPlanDomainById(planId) {
     const raw = await PlanDAO.getById(planId);

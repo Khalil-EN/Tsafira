@@ -2,12 +2,6 @@ const Message = require("../schemas/messageSchema");
 
 const MessageDAO = {
 
-  /*
-  |--------------------------------------------------------------------------
-  | Read
-  |--------------------------------------------------------------------------
-  */
-
   async getMessages(conversationId, page = 1, limit = 30) {
     return await Message.find({
       conversation: conversationId,
@@ -70,12 +64,6 @@ const MessageDAO = {
     return messages.reverse();
   },
 
-  /*
-  |--------------------------------------------------------------------------
-  | Create
-  |--------------------------------------------------------------------------
-  */
-
   async createMessage(data) {
     const message = await Message.create(data);
 
@@ -87,12 +75,6 @@ const MessageDAO = {
       .lean();
   },
 
-  /*
-  |--------------------------------------------------------------------------
-  | Update
-  |--------------------------------------------------------------------------
-  */
-
   async updateMessage(messageId, updates) {
     return await Message.findByIdAndUpdate(
       messageId,
@@ -102,12 +84,6 @@ const MessageDAO = {
       }
     );
   },
-
-  /*
-  |--------------------------------------------------------------------------
-  | Soft delete
-  |--------------------------------------------------------------------------
-  */
 
   async deleteMessage(messageId) {
     return await Message.findByIdAndUpdate(

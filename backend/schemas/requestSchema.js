@@ -3,10 +3,6 @@ const mongoose = require("mongoose");
 const requestSchema =
   new mongoose.Schema(
     {
-      // ======================================================================
-      // TYPE
-      // ======================================================================
-
       type: {
         type: String,
         enum: [
@@ -16,22 +12,12 @@ const requestSchema =
         required: true,
       },
 
-      // ======================================================================
-      // SENDER
-      // ======================================================================
-
       sender: {
         type:
           mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
       },
-
-      // ======================================================================
-      // USER RECIPIENT
-      //
-      // Used for friend requests.
-      // ======================================================================
 
       recipient: {
         type:
@@ -40,22 +26,12 @@ const requestSchema =
         default: null,
       },
 
-      // ======================================================================
-      // COMMUNITY
-      //
-      // Used for community join requests.
-      // ======================================================================
-
       community: {
         type:
           mongoose.Schema.Types.ObjectId,
         ref: "Community",
         default: null,
       },
-
-      // ======================================================================
-      // STATUS
-      // ======================================================================
 
       status: {
         type: String,
@@ -67,10 +43,6 @@ const requestSchema =
         default: "pending",
       },
 
-      // ======================================================================
-      // CREATED
-      // ======================================================================
-
       createdAt: {
         type: Date,
         default: Date.now,
@@ -80,21 +52,6 @@ const requestSchema =
       timestamps: false,
     }
   );
-
-// ============================================================================
-// VALIDATE REQUEST RELATIONSHIPS
-// ============================================================================
-//
-// Friend request:
-//   sender    = User
-//   recipient = User
-//   community = null
-//
-// Community request:
-//   sender    = User
-//   recipient = null
-//   community = Community
-// ============================================================================
 
 requestSchema.pre("validate", function () {
   if (this.type === "friend") {
@@ -117,10 +74,6 @@ requestSchema.pre("validate", function () {
     this.recipient = null;
   }
 });
-
-// ============================================================================
-// INDEXES
-// ============================================================================
 
 requestSchema.index({
   sender: 1,

@@ -4,17 +4,13 @@ const UserService = require("../user/UserService");
 
 const FeedService = {
   async getUserFeed(userId, options = {}) {
-    const [
-      friendIds,
-      communityIds,
-    ] = await Promise.all([
-      FriendService.getFriendIds(userId),
-      UserService.getUserCommunityIds(userId),
-    ]);
+    const [friendIds, communityIds] = await Promise.all([
+                                      FriendService.getFriendIds(userId),
+                                      UserService.getUserCommunityIds(userId),
+                                    ]);
 
     const filter = {
       isDeleted: { $ne: true },
-
       $or: [
         {
           author: userId,
@@ -31,23 +27,13 @@ const FeedService = {
       ],
     };
 
-    const page = Math.max(
-      1,
-      parseInt(options.page, 10) || 1
-    );
+    const page = Math.max(1, parseInt(options.page, 10) || 1);
 
-    const limit = Math.min(
-      50,
-      Math.max(1, parseInt(options.limit, 10) || 20)
-    );
+    const limit = Math.min(50, Math.max(1, parseInt(options.limit, 10) || 20));
 
     const skip = (page - 1) * limit;
 
-    return await PostService.getFeedPosts(
-      filter,
-      { limit, skip },
-      userId
-    );
+    return await PostService.getFeedPosts(filter, { limit, skip }, userId);
   },
 };
 

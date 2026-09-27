@@ -15,12 +15,6 @@ class ActivityEligibilityPolicy {
             return false;
         }
 
-        /*
-         * maxCost is intentionally NOT used as a hard constraint.
-         *
-         * Budget is handled by ActivitySelector through soft
-         * budget scoring.
-         */
         return true;
     }
 }

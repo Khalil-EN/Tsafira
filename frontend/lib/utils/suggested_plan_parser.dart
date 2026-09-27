@@ -1,8 +1,6 @@
 import '../models/trip_plan_item.dart';
 import '../models/trip_plan_budget.dart';
 
-/// Turns the raw suggested-plan API response into the typed shapes the
-/// UI consumes. Pure functions only — no widget or navigation concerns.
 class SuggestedPlanParser {
   SuggestedPlanParser._();
 

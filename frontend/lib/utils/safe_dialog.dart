@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-/// Opens a dialog one frame later than [showDialog] would.
-///
-/// Needed whenever a dialog is triggered from inside a widget whose own
-/// tap (an InkWell splash) or a PopupMenuButton's closing route is still
-/// inserting/removing an OverlayEntry in the same frame — calling
-/// showDialog synchronously in that situation can throw a
-/// "Duplicate GlobalKeys" error because both routes race for the same
-/// Overlay. Deferring to the next frame lets the triggering route finish
-/// first.
 Future<T?> showSafeDialog<T>({
   required BuildContext context,
   required WidgetBuilder builder,

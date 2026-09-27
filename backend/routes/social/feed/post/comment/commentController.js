@@ -1,15 +1,10 @@
-const systemManager =
-    require("../../../../../system/SystemManager");
+const systemManager = require("../../../../../system/SystemManager");
 
 const CommentController = {
 
     async createComment(req, res) {
 
-        const comment =
-            await systemManager.addComment(
-                req.user,
-                req.body
-            );
+        const comment = await systemManager.addComment(req.user, req.body);
 
         return res.status(201).json({
             success: true,
@@ -19,11 +14,7 @@ const CommentController = {
 
     async likeComment(req, res) {
 
-        const comment =
-            await systemManager.likeComment(
-                req.user,
-                req.params.id
-            );
+        const comment = await systemManager.likeComment(req.user, req.params.id);
 
         return res.status(200).json({
             success: true,
@@ -33,10 +24,7 @@ const CommentController = {
 
     async deleteComment(req, res) {
 
-        await systemManager.deleteComment(
-            req.user,
-            req.params.id
-        );
+        await systemManager.deleteComment(req.user, req.params.id);
 
         return res.status(200).json({
             success: true,
@@ -49,12 +37,7 @@ const CommentController = {
 
     async updateComment(req, res) {
 
-        const comment =
-            await systemManager.updateComment(
-                req.user,
-                req.params.id,
-                req.body.text
-            );
+        const comment = await systemManager.updateComment(req.user, req.params.id, req.body.text);
 
         return res.status(200).json({
             success: true,

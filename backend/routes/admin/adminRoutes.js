@@ -1,18 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
-const asyncHandler =
-  require("../../middlewares/asyncHandler");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
-const adminAuth =
-  require("../../middlewares/adminAuth");
+const adminAuth = require("../../middlewares/adminAuth");
 
 const {
   authenticateToken,
 } = require("../../middlewares/authMiddleware");
 
-const AdminController =
-  require("./adminController");
+const AdminController = require("./adminController");
 
 const {
   validateUsersQuery,
@@ -23,18 +20,12 @@ const {
   validateBroadcast,
 } = require("./adminValidator");
 
-// ======================================================
-// ADMIN AUTHORIZATION
-// ======================================================
 
 router.use(
   authenticateToken,
   adminAuth
 );
 
-// ======================================================
-// USERS
-// ======================================================
 
 router.get(
   "/users",
@@ -60,9 +51,6 @@ router.patch(
   )
 );
 
-// ======================================================
-// CONTENT MODERATION
-// ======================================================
 
 router.delete(
   "/posts/:id",
@@ -72,9 +60,6 @@ router.delete(
   )
 );
 
-// ======================================================
-// ANALYTICS
-// ======================================================
 
 router.get(
   "/analytics/events",
@@ -99,10 +84,6 @@ router.get(
     AdminController.getRecentEvents
   )
 );
-
-// ======================================================
-// BROADCAST
-// ======================================================
 
 router.post(
   "/notifications/broadcast",

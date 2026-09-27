@@ -1,14 +1,10 @@
-const express =
-  require("express");
+const express = require("express");
 
-const AIController =
-  require("./aiController");
+const AIController = require("./aiController");
 
-const router =
-  express.Router();
+const router = express.Router();
 
-  const asyncHandler =
-    require("../../middlewares/asyncHandler");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 const {
     authenticateToken,
@@ -21,16 +17,12 @@ const auth = [
 ];
 
 
-// POST /ai/conversation
 
 router.post(
   "/conversation",
   ...auth,
   asyncHandler(AIController.getOrCreateConversation)
 );
-
-
-// POST /ai/chat
 
 router.post(
   "/chat",
@@ -39,5 +31,4 @@ router.post(
 );
 
 
-module.exports =
-  router;
+module.exports = router;

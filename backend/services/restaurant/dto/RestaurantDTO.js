@@ -25,9 +25,7 @@ class RestaurantDTO {
         this.rating = rating;
         this.reviews = reviews;
         this.image = image;
-        this.detailimages = Array.isArray(detailimages)
-            ? detailimages
-            : [];
+        this.detailimages = Array.isArray(detailimages) ? detailimages : [];
         this.openingHours = openingHours;
         this.cuisines = Array.isArray(cuisines) ? cuisines : [];
         this.tags = Array.isArray(tags) ? tags : [];

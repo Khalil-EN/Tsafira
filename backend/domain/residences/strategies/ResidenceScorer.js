@@ -6,10 +6,7 @@ class ResidenceScorer {
     }
 
     selectBest(residencies) {
-        if (
-            !Array.isArray(residencies) ||
-            residencies.length === 0
-        ) {
+        if (!Array.isArray(residencies) || residencies.length === 0) {
             return null;
         }
 
@@ -17,8 +14,7 @@ class ResidenceScorer {
         let bestScore = -Infinity;
 
         for (const residence of residencies) {
-            const score =
-                this.score(residence);
+            const score = this.score(residence);
 
             if (score > bestScore) {
                 bestScore = score;

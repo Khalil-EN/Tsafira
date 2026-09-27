@@ -1,8 +1,3 @@
-/**
- * User domain enumerations.
- * Import these wherever you need to reason about user roles or statuses
- * instead of using magic strings.
- */
 
 const UserRole = Object.freeze({
   FREEMIUM: 'freemium',

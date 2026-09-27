@@ -16,14 +16,11 @@ class ActivitySelector {
         this.days = Number(days) || 0;
         this.numberOfPeople = Number(numberOfPeople) || 1;
         this.activityBudget = Number(activityBudget) || 0;
-        this.maxActivitiesPerGroup =
-            Math.max(1, Number(maxActivitiesPerGroup) || 3);
+        this.maxActivitiesPerGroup = Math.max(1, Number(maxActivitiesPerGroup) || 3);
 
         this.eligibilityPolicy =
             eligibilityPolicy ||
-            new ActivityEligibilityPolicy({
-                numberOfPeople: this.numberOfPeople,
-            });
+            new ActivityEligibilityPolicy({numberOfPeople: this.numberOfPeople,});
     }
 
     select(activities) {
@@ -38,20 +35,12 @@ class ActivitySelector {
             };
         }
 
-        /*
-         * Budget is NOT an eligibility constraint.
-         *
-         * We only reject activities that are genuinely invalid
-         * or whose cost cannot be estimated.
-         */
         const eligibleActivities = activities.filter(activity =>
             this.eligibilityPolicy.isEligible(activity)
         );
 
         if (eligibleActivities.length === 0) {
-            warnings.push(
-                'No valid activities are available.'
-            );
+            warnings.push('No valid activities are available.');
 
             return {
                 groups: [],
@@ -59,23 +48,10 @@ class ActivitySelector {
             };
         }
 
-        const scoredActivities = this._scoreActivities(
-            eligibleActivities
-        );
+        const scoredActivities = this._scoreActivities(eligibleActivities);
 
-        /*
-         * There are two activity groups per day:
-         *
-         * Day 1: morning + afternoon
-         * Day 2: morning + afternoon
-         * ...
-         */
         const requestedGroupCount = this.days * 2;
 
-        /*
-         * The total activity budget is distributed as a soft
-         * target across the activity slots.
-         */
         const groupBudget =
             requestedGroupCount > 0
                 ? this.activityBudget / requestedGroupCount
@@ -88,10 +64,7 @@ class ActivitySelector {
             }
         );
 
-        const selectedGroups = groups.slice(
-            0,
-            requestedGroupCount
-        );
+        const selectedGroups = groups.slice(0, requestedGroupCount);
 
         if (selectedGroups.length < requestedGroupCount) {
             warnings.push(
@@ -110,14 +83,6 @@ class ActivitySelector {
     _scoreActivities(activities) {
         const scored = this.scorer.scoreAll(activities);
 
-        /*
-         * Preserve the original quality score.
-         *
-         * ProximityGrouper uses this to determine whether two
-         * activities are genuinely comparable in quality.
-         *
-         * The final score can include a soft budget preference.
-         */
         return scored.map(item => {
             const estimatedCost =
                 item.activity.getEstimatedCost(
@@ -131,14 +96,7 @@ class ActivitySelector {
                 this._getIndividualActivityBudget()
             );
 
-            /*
-             * Budget is deliberately a secondary factor.
-             * It should influence selection without destroying
-             * the activity's quality/relevance score.
-             */
-            const score =
-                originalScore +
-                budgetScore * 10;
+            const score = originalScore + budgetScore * 10;
 
             return {
                 ...item,

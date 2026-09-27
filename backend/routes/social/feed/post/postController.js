@@ -2,16 +2,9 @@ const systemManager =
   require("../../../../system/SystemManager");
 
 const PostController = {
-  // ============================================================
-  // CREATE
-  // ============================================================
 
   async createPost(req, res) {
-    const post =
-      await systemManager.createPost(
-        req.user,
-        req.body
-      );
+    const post = await systemManager.createPost(req.user, req.body);
 
     return res.status(201).json({
       success: true,
@@ -19,16 +12,8 @@ const PostController = {
     });
   },
 
-  // ============================================================
-  // GET SINGLE POST
-  // ============================================================
-
   async getPost(req, res) {
-    const post =
-      await systemManager.getPostById(
-        req.user,
-        req.params.id
-      );
+    const post = await systemManager.getPostById(req.user,req.params.id);
 
     return res.status(200).json({
       success: true,
@@ -36,17 +21,9 @@ const PostController = {
     });
   },
 
-
-  // ============================================================
-  // LIKE
-  // ============================================================
 
   async likePost(req, res) {
-    const post =
-      await systemManager.likePost(
-        req.user,
-        req.params.id
-      );
+    const post = await systemManager.likePost(req.user, req.params.id);
 
     return res.status(200).json({
       success: true,
@@ -54,16 +31,9 @@ const PostController = {
     });
   },
 
-  // ============================================================
-  // DELETE
-  // ============================================================
 
   async updatePost(req, res) {
-    const post = await systemManager.updatePost(
-        req.user,
-        req.params.id,
-        req.body
-    );
+    const post = await systemManager.updatePost(req.user, req.params.id, req.body);
 
     return res.status(200).json({
         success: true,
@@ -80,16 +50,9 @@ const PostController = {
     });
   },
 
-  // ============================================================
-  // COMMENTS
-  // ============================================================
 
   async getComments(req, res) {
-    const comments =
-      await systemManager.getCommentsByPost(
-        req.user,
-        req.params.id
-      );
+    const comments = await systemManager.getCommentsByPost(req.user, req.params.id);
 
     return res.status(200).json({
       success: true,

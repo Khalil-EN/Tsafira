@@ -1,7 +1,5 @@
 const CommunityDTO = require("./dto/CommunityDTO");
-const CommunitySearchResultDTO = require(
-  "./dto/CommunitySearchResultDTO"
-);
+const CommunitySearchResultDTO = require("./dto/CommunitySearchResultDTO");
 const CommunityDetailDTO = require("./dto/CommunityDetailDTO");
 
 
@@ -25,9 +23,8 @@ const CommunityAssembler = {
     },
 
     toDTOList(communities = []) {
-        return communities
-            .map(community => this.toDTO(community))
-            .filter(Boolean);
+        return communities.map(community => this.toDTO(community))
+                          .filter(Boolean);
     },
 
     toDetailDTO(community, membership = null) {
@@ -42,19 +39,12 @@ const CommunityAssembler = {
         });
     },
 
-    toSearchResult(
-        community,
-        userId,
-        membershipInfo = {}
-    ) {
+    toSearchResult(community, userId, membershipInfo = {}) {
         if (!community) {
             return null;
         }
 
-        const communityId =
-            community._id?.toString() ??
-            community.id?.toString() ??
-            null;
+        const communityId = community._id?.toString() ?? community.id?.toString() ?? null;
 
         return new CommunitySearchResultDTO({
             id: communityId,

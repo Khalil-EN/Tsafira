@@ -9,10 +9,6 @@ class NotificationService {
   static final FlutterLocalNotificationsPlugin _local =
   FlutterLocalNotificationsPlugin();
 
-  // ============================================================
-  // INITIALIZATION
-  // ============================================================
-
   static Future<void> init() async {
     const android = AndroidInitializationSettings(
       '@mipmap/ic_launcher',
@@ -44,10 +40,6 @@ class NotificationService {
     );
   }
 
-  // ============================================================
-  // FCM TOKEN
-  // ============================================================
-
   static Future<void> saveFcmToken(
       String token,
       ) async {
@@ -63,10 +55,6 @@ class NotificationService {
       // Token failure should not break the application.
     }
   }
-
-  // ============================================================
-  // FOREGROUND NOTIFICATION
-  // ============================================================
 
   static Future<void> _handleForegroundMessage(
       RemoteMessage message,
@@ -93,10 +81,6 @@ class NotificationService {
     );
   }
 
-  // ============================================================
-  // GET NOTIFICATIONS
-  // ============================================================
-
   static Future<Map<String, dynamic>> getNotifications({
     int page = 1,
     int limit = 20,
@@ -113,10 +97,6 @@ class NotificationService {
     return ApiResponse.decodeMap(response.body);
   }
 
-  // ============================================================
-  // MARK ONE AS READ
-  // ============================================================
-
   static Future<void> markRead(
       String notificationId,
       ) async {
@@ -125,10 +105,6 @@ class NotificationService {
       endpoint: 'notifications/$notificationId/read',
     );
   }
-
-  // ============================================================
-  // MARK ALL AS READ
-  // ============================================================
 
   static Future<void> markAllRead() async {
     await HttpClient.request(

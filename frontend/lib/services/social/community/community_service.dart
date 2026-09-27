@@ -2,9 +2,6 @@ import '../../api_response.dart';
 import '../../http_client.dart';
 
 class CommunityService {
-  // ============================================================
-  // CREATE
-  // ============================================================
 
   static Future<Map<String, dynamic>> create({
     required String name,
@@ -22,10 +19,6 @@ class CommunityService {
     return ApiResponse.decodeMap(response.body);
   }
 
-  // ============================================================
-  // GET ALL
-  // ============================================================
-
   static Future<List<Map<String, dynamic>>> getAll() async {
     final response = await HttpClient.request(
       method: HttpMethod.get,
@@ -37,9 +30,6 @@ class CommunityService {
         .toList();
   }
 
-  // ============================================================
-  // GET BY ID
-  // ============================================================
 
   static Future<Map<String, dynamic>> getById(
       String communityId,
@@ -52,10 +42,6 @@ class CommunityService {
     return ApiResponse.decodeMap(response.body);
   }
 
-  // ============================================================
-  // JOIN REQUEST
-  // ============================================================
-
   static Future<void> requestToJoinById(
       String communityId,
       ) async {
@@ -64,10 +50,6 @@ class CommunityService {
       endpoint: 'communities/$communityId/join',
     );
   }
-
-  // ============================================================
-  // MEMBERS
-  // ============================================================
 
   static Future<List<Map<String, dynamic>>> getMembers(
       String communityId,
@@ -82,10 +64,6 @@ class CommunityService {
         .toList();
   }
 
-  // ============================================================
-  // APPROVE MEMBER
-  // ============================================================
-
   static Future<void> approveMember({
     required String communityId,
     required String userId,
@@ -97,9 +75,6 @@ class CommunityService {
     );
   }
 
-  // ============================================================
-  // MY COMMUNITIES
-  // ============================================================
 
   static Future<List<Map<String, dynamic>>> getMine() async {
     final response = await HttpClient.request(
@@ -111,10 +86,6 @@ class CommunityService {
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
-
-  // ============================================================
-  // UPDATE
-  // ============================================================
 
   static Future<Map<String, dynamic>> update({
     required String communityId,
@@ -128,10 +99,6 @@ class CommunityService {
 
     return ApiResponse.decodeMap(response.body);
   }
-
-  // ============================================================
-  // DELETE
-  // ============================================================
 
   static Future<void> delete(
       String communityId,

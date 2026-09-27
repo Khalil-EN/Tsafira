@@ -1,80 +1,40 @@
-const ItineraryPlanner =
-    require('./ItineraryPlanner');
+const ItineraryPlanner = require('./ItineraryPlanner');
 
-const InterestBasedScorer =
-    require('../../activities/strategies/InterestBasedScorer');
+const InterestBasedScorer = require('../../activities/strategies/InterestBasedScorer');
 
-const ProximityGrouper =
-    require('../../activities/strategies/ProximityGrouper');
+const ProximityGrouper = require('../../activities/strategies/ProximityGrouper');
 
-const NearActivityScorer =
-    require('../../restaurants/strategies/NearActivityScorer');
+const NearActivityScorer = require('../../restaurants/strategies/NearActivityScorer');
 
-const NearResidenceScorer =
-    require('../../restaurants/strategies/NearResidenceScorer');
+const NearResidenceScorer = require('../../restaurants/strategies/NearResidenceScorer');
 
-const WeightedResidenceScorer =
-    require('../../residences/strategies/WeightedResidenceScorer');
+const WeightedResidenceScorer = require('../../residences/strategies/WeightedResidenceScorer');
 
-const ActivityEligibilityPolicy =
-    require('../../activities/ActivityEligibilityPolicy');
+const ActivityEligibilityPolicy = require('../../activities/ActivityEligibilityPolicy');
 
-const RestaurantEligibilityPolicy =
-    require('../../restaurants/RestaurantEligibilityPolicy');
+const RestaurantEligibilityPolicy = require('../../restaurants/RestaurantEligibilityPolicy');
 
 const ItineraryPlannerFactory = {
     create(request, config) {
-        const numberOfPeople =
-            request.resolvedPeopleCount();
+        const numberOfPeople = request.resolvedPeopleCount();
 
-        const activityEligibilityPolicy =
-            new ActivityEligibilityPolicy({
-                numberOfPeople,
-            });
+        const activityEligibilityPolicy = new ActivityEligibilityPolicy({numberOfPeople,});
 
-        const restaurantEligibilityPolicy =
-            new RestaurantEligibilityPolicy({
-                numberOfPeople,
-            });
+        const restaurantEligibilityPolicy = new RestaurantEligibilityPolicy({numberOfPeople,});
 
         return new ItineraryPlanner({
-            /*
-             * Activities
-             */
-            activityScorer:
-                new InterestBasedScorer({
-                    interests:
-                        request.interests,
-                }),
-
-            activityGrouper:
-                new ProximityGrouper(),
-
+            activityScorer: new InterestBasedScorer({interests: request.interests}),
+            activityGrouper: new ProximityGrouper(),
             activityEligibilityPolicy,
 
-            /*
-             * Restaurants
-             */
             restaurantScorer:
                 new NearActivityScorer({
-                    cuisineTags:
-                        request.restaurantTags,
-
-                    facilities:
-                        config.facilities,
+                    cuisineTags: request.restaurantTags,
+                    facilities: config.facilities,
                 }),
-
             restaurantEligibilityPolicy,
+            breakfastScorer: new NearResidenceScorer(),
 
-            /*
-             * Breakfast
-             */
-            breakfastScorer:
-                new NearResidenceScorer(),
-
-            /*
-             * Residence
-             */
             residenceScorer: new WeightedResidenceScorer({
                           maxBudget: config.accommodationBudget,
                           nights: request.days,
@@ -84,31 +44,15 @@ const ItineraryPlannerFactory = {
                           weight: config.weight,
                       }),
 
-            /*
-             * Planning context
-             */
-            days:
-                request.days,
-
-            meals:
-                request.meals,
-
+            days: request.days,
+            meals: request.meals,
             numberOfPeople,
 
-            /*
-             * Budgets
-             */
-            activityBudget:
-                config.activityBudgetPerDay,
-
-            mealBudgets:
-                config.mealBudgets,
-
-            accommodationBudget:
-                config.accommodationBudget,
+            activityBudget: config.activityBudgetPerDay,
+            mealBudgets: config.mealBudgets,
+            accommodationBudget: config.accommodationBudget,
         });
     },
 };
 
-module.exports =
-    ItineraryPlannerFactory;
+module.exports = ItineraryPlannerFactory;

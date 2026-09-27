@@ -24,7 +24,6 @@ const notificationSchema = new mongoose.Schema(
     },
     title: { type: String, required: true },
     body:  { type: String, required: true },
-    // Optional reference to the entity that triggered the notification
     refModel: {
       type: String,
       enum: ['User', 'CommunityPost', 'Request', 'Community', null],
@@ -39,7 +38,6 @@ const notificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Automatically delete notifications older than 60 days
 notificationSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 24 * 60 * 60 });
 
 module.exports = mongoose.model('Notification', notificationSchema);

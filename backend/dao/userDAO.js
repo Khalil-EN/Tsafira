@@ -5,18 +5,10 @@ const { MemberStatus } = require("../domain/communities/enums/communityEnums");
 
 const UserDAO = {
 
-    // ======================================================
-    // CREATE
-    // ======================================================
-
     async createUser(userData) {
         const user = new UserModel(userData);
         return await user.save();
     },
-
-    // ======================================================
-    // GET
-    // ======================================================
 
     async getUserById(id) {
         return await UserModel
@@ -61,20 +53,12 @@ const UserDAO = {
         return await UserModel.countDocuments();
     },
 
-    // ======================================================
-    // REFRESH TOKEN
-    // ======================================================
-
     async getUserByIdAndRefreshtoken(id) {
         return await UserModel
             .findById(id)
             .select("+refreshToken")
             .lean();
     },
-
-    // ======================================================
-    // COMMUNITIES
-    // ======================================================
 
     async getUserCommunityIds(userId) {
         const memberships = await CommunityMemberModel
@@ -90,10 +74,6 @@ const UserDAO = {
         );
     },
 
-    // ======================================================
-    // UPDATE
-    // ======================================================
-
     async updateUser(id, updateData) {
         return await UserModel.findByIdAndUpdate(
             id,
@@ -101,10 +81,6 @@ const UserDAO = {
             { new: true }
         ).lean();
     },
-
-    // ======================================================
-    // FRIENDS
-    // ======================================================
 
     async addFriend(userId, friendId) {
         const [user, friend] = await Promise.all([
@@ -135,10 +111,6 @@ const UserDAO = {
         };
     },
 
-    // ======================================================
-    // FCM
-    // ======================================================
-
     async saveFcmToken(userId, token) {
         return await UserModel.findByIdAndUpdate(
             userId,
@@ -148,10 +120,6 @@ const UserDAO = {
             { new: true }
         ).lean();
     },
-
-    // ======================================================
-    // ADMIN
-    // ======================================================
 
     async banUser(userId) {
         return await UserModel.findByIdAndUpdate(
@@ -178,10 +146,6 @@ const UserDAO = {
     async deleteUser(id) {
         return await UserModel.findByIdAndDelete(id);
     },
-
-    // ======================================================
-    // SEARCH
-    // ======================================================
 
     async searchUsers(query, excludeUserId) {
         const normalizedQuery = String(query || '').trim();
@@ -217,10 +181,6 @@ const UserDAO = {
             .lean();
     },
 
-    // ======================================================
-    // BULK
-    // ======================================================
-
     async getUsersByIds(ids, projection = {}) {
         return await UserModel.find({
             _id: {
@@ -243,10 +203,6 @@ const UserDAO = {
           .select("+passwordHash +refreshToken")
           .lean();
   },
-
-  // ======================================================
-  // EMAIL VERIFICATION
-  // ======================================================
 
   async getUserForEmailVerification(email) {
       return await UserModel

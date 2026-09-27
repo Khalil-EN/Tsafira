@@ -17,94 +17,32 @@ const app = express();
 // Routes
 // ============================================================================
 
-// ── Authentication ──────────────────────────────────────────────────────────
-
-const authRoutes =
-    require("./routes/auth/authRoutes");
-
-
-// ── Administration ──────────────────────────────────────────────────────────
-
-const adminRoutes =
-    require("./routes/admin/adminRoutes");
-
-
-// ── User ──────────────────────────────────────────────────────────
-
-
-const userRoutes =
-    require("./routes/user/userRoutes");
-
-// ── AI ──────────────────────────────────────────────────────────
-
-const aiRoutes =
-  require("./routes/ai/aiRoutes");
-
-
-
-// ── Social ──────────────────────────────────────────────────────────────────
-
-const friendRoutes =
-    require("./routes/social/friend/friendRoutes");
-
-const requestRoutes =
-    require("./routes/social/request/requestRoutes");
-
-const feedRoutes =
-    require("./routes/social/feed/feedRoutes");
-
-const postRoutes =
-    require("./routes/social/feed/post/postRoutes");
-
-const commentRoutes =
-    require("./routes/social/feed/post/comment/commentRoutes");
-
-const communityRoutes =
-    require("./routes/social/community/communityRoutes");
-
-const messageRoutes =
-    require("./routes/social/messaging/messagingRoutes");
-
-
-// ── Notifications ──────────────────────────────────────────────────────────
-
-const notificationRoutes =
-    require("./routes/notification/notificationRoutes");
-
-
-// ── Search ──────────────────────────────────────────────────────────────────
-
-const searchRoutes =
-    require("./routes/search/searchRoutes");
-
-
-// ── Discovery / domain resources ────────────────────────────────────────────
-
-const residenceRoutes =
-    require("./routes/residence/residenceRoutes");
-
-const restaurantRoutes =
-    require("./routes/restaurant/restaurantRoutes");
-
-const activityRoutes =
-    require("./routes/activity/activityRoutes");
-
-    const itineraryRoutes =
-    require("./routes/itinerary/itineraryRoutes");
+const authRoutes = require("./routes/auth/authRoutes");
+const adminRoutes = require("./routes/admin/adminRoutes");
+const userRoutes = require("./routes/user/userRoutes");
+const aiRoutes = require("./routes/ai/aiRoutes");
+const friendRoutes = require("./routes/social/friend/friendRoutes");
+const requestRoutes = require("./routes/social/request/requestRoutes");
+const feedRoutes = require("./routes/social/feed/feedRoutes");
+const postRoutes = require("./routes/social/feed/post/postRoutes");
+const commentRoutes = require("./routes/social/feed/post/comment/commentRoutes");
+const communityRoutes = require("./routes/social/community/communityRoutes");
+const messageRoutes = require("./routes/social/messaging/messagingRoutes");
+const notificationRoutes = require("./routes/notification/notificationRoutes");
+const searchRoutes = require("./routes/search/searchRoutes");
+const residenceRoutes = require("./routes/residence/residenceRoutes");
+const restaurantRoutes = require("./routes/restaurant/restaurantRoutes");
+const activityRoutes = require("./routes/activity/activityRoutes");
+const itineraryRoutes = require("./routes/itinerary/itineraryRoutes");
 
 
 // ============================================================================
 // Middlewares
 // ============================================================================
 
-const analyticsMiddleware =
-    require("./middlewares/analyticsMiddleware");
-
-const errorHandler =
-    require("./middlewares/errorHandler");
-
-const notFoundHandler =
-    require("./middlewares/notFoundHandler");
+const analyticsMiddleware = require("./middlewares/analyticsMiddleware");
+const errorHandler = require("./middlewares/errorHandler");
+const notFoundHandler = require("./middlewares/notFoundHandler");
 
 
 // ============================================================================
@@ -266,115 +204,23 @@ app.get(
 // API Routes
 // ============================================================================
 
-// ── Authentication ──────────────────────────────────────────────────────────
-
-app.use(
-    "/api/auth",
-    authRoutes
-);
-
-
-// ── AI ──────────────────────────────────────────────────────────
-
-app.use(
-  "/api/ai",
-  aiRoutes
-);
-
-
-// ── Social ──────────────────────────────────────────────────────────────────
-
-app.use(
-    "/api/friends",
-    friendRoutes
-);
-
-app.use(
-    "/api/requests",
-    requestRoutes
-);
-
-app.use(
-    "/api/feed",
-    feedRoutes
-);
-
-app.use(
-    "/api/posts",
-    postRoutes
-);
-
-app.use(
-    "/api/comments",
-    commentRoutes
-);
-
-app.use(
-    "/api/communities",
-    communityRoutes
-);
-
+app.use("/api/auth", authRoutes);
+app.use("/api/ai", aiRoutes);
+app.use("/api/friends", friendRoutes);
+app.use("/api/requests",requestRoutes);
+app.use("/api/feed", feedRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentRoutes);
+app.use("/api/communities",communityRoutes);
 app.use("/api", messageRoutes);
-
-
-// ── Notifications ──────────────────────────────────────────────────────────
-
-app.use(
-    "/api/notifications",
-    notificationRoutes
-);
-
-
-// ── Search ──────────────────────────────────────────────────────────────────
-
-app.use(
-    "/api/search",
-    searchRoutes
-);
-
-
-// ── Residences ──────────────────────────────────────────────────────────────
-
-app.use(
-    "/api/residences",
-    residenceRoutes
-);
-
-
-// ── Restaurants ─────────────────────────────────────────────────────────────
-
-app.use(
-    "/api/restaurants",
-    restaurantRoutes
-);
-
-
-// ── Activities ──────────────────────────────────────────────────────────────
-
-app.use(
-    "/api/activities",
-    activityRoutes
-);
-
-app.use(
-    "/api/itineraries",
-    itineraryRoutes
-);
-
-
-// ── Administration ──────────────────────────────────────────────────────────
-
-app.use(
-    "/api/admin",
-    adminRoutes
-);
-
-// ── User ──────────────────────────────────────────────────────────
-
-app.use(
-    "/api/users",
-    userRoutes
-);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/search", searchRoutes);
+app.use("/api/residences", residenceRoutes);
+app.use("/api/restaurants", restaurantRoutes);
+app.use("/api/activities", activityRoutes);
+app.use("/api/itineraries", itineraryRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/users", userRoutes);
 
 
 // ============================================================================
@@ -427,7 +273,7 @@ const server =
 
 
 // ============================================================================
-// Graceful shutdown
+// Shutdown
 // ============================================================================
 
 process.on(

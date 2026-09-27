@@ -1,7 +1,6 @@
 class BudgetAllocationPolicy {
     static allocate(totalBudget) {
-        const budget =
-            Number(totalBudget) || 0;
+        const budget = Number(totalBudget) || 0;
 
         if (budget <= 0) {
             return {
@@ -13,20 +12,12 @@ class BudgetAllocationPolicy {
         }
 
         return {
-            accommodation:
-                budget * 0.40,
-
-            food:
-                budget * 0.30,
-
-            activities:
-                budget * 0.20,
-
-            transport:
-                budget * 0.10,
+            accommodation: budget * 0.40,
+            food: budget * 0.30,
+            activities: budget * 0.20,
+            transport: budget * 0.10,
         };
     }
 }
 
-module.exports =
-    BudgetAllocationPolicy;
+module.exports = BudgetAllocationPolicy;

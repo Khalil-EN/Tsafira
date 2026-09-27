@@ -1,11 +1,7 @@
-const ItineraryPlanDTO =
-    require('./dto/ItineraryPlanDTO');
+const ItineraryPlanDTO = require('./dto/ItineraryPlanDTO');
 
 class ItineraryPlanAssembler {
-    static toResponse(
-        planningResult,
-        request
-    ) {
+    static toResponse(planningResult, request) {
         if (!planningResult) {
             return null;
         }
@@ -13,46 +9,16 @@ class ItineraryPlanAssembler {
         return {
             plan:
                 ItineraryPlanDTO({
-                    residency:
-                        planningResult.residency,
-
-                    days:
-                        planningResult.days ??
-                        [],
-
-                    breakfastSlots:
-                        planningResult
-                            .breakfastSlots ??
-                        [],
-
-                    nightActivities:
-                        planningResult
-                            .nightActivities ??
-                        [],
-
-                    meals:
-                        request?.meals ??
-                        planningResult.meals ??
-                        [],
-
-                    budget:
-                        planningResult.budget
-                            ?.toJSON
-                            ? planningResult
-                                .budget
-                                .toJSON()
-                            : planningResult
-                                .budget ??
-                              null,
-
-                    warnings:
-                        planningResult
-                            .warnings ??
-                        [],
+                    residency: planningResult.residency,
+                    days: planningResult.days ?? [],
+                    breakfastSlots: planningResult.breakfastSlots ?? [],
+                    nightActivities: planningResult.nightActivities ?? [],
+                    meals: request?.meals ?? planningResult.meals ?? [],
+                    budget: planningResult.budget ?.toJSON ? planningResult.budget.toJSON() : planningResult.budget ?? null,
+                    warnings: planningResult.warnings ?? [],
                 }),
         };
     }
 }
 
-module.exports =
-    ItineraryPlanAssembler;
+module.exports = ItineraryPlanAssembler;

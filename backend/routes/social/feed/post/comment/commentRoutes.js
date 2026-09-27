@@ -2,14 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const asyncHandler =
-    require("../../../../../middlewares/asyncHandler");
+const asyncHandler = require("../../../../../middlewares/asyncHandler");
 
-const socialAuth =
-    require("../../../socialAuth");
+const socialAuth = require("../../../socialAuth");
 
-const CommentController =
-    require("./commentController");
+const CommentController = require("./commentController");
 
 const {
     validateCreateComment,
@@ -18,7 +15,6 @@ const {
 
 router.use(socialAuth);
 
-// POST /comments
 router.post(
     "/",
     validateCreateComment,
@@ -27,7 +23,6 @@ router.post(
     )
 );
 
-// POST /comments/:id/like
 router.post(
     "/:id/like",
     validateCommentId,
@@ -36,7 +31,6 @@ router.post(
     )
 );
 
-// DELETE /comments/:id
 router.delete(
     "/:id",
     validateCommentId,
@@ -45,7 +39,6 @@ router.delete(
     )
 );
 
-// PUT /comments/:id
 router.put(
     "/:id",
     validateCommentId,

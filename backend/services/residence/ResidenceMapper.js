@@ -8,56 +8,20 @@ class ResidenceMapper {
 
         return new Residence({
             id: doc._id?.toString() ?? doc.id ?? null,
-
             name: doc.name,
-
             description: doc.description,
-
             address: doc.address,
-
-            // One room / one night
-            priceRange:
-                doc.pricerange ??
-                doc.priceRange ??
-                null,
-
+            priceRange: doc.pricerange ?? doc.priceRange ?? null,
             rating: doc.rating,
-
-            numberOfReviews:
-                doc.numberofreviews ??
-                doc.numberOfReviews ??
-                0,
-
-            checkInDate:
-                doc.checkindate ??
-                doc.checkInDate ??
-                null,
-
-            checkOutDate:
-                doc.checkoutdate ??
-                doc.checkOutDate ??
-                null,
-
-            image:
-                doc.image ??
-                doc.imageurl ??
-                null,
-
-            secondaryImages:
-                doc.secondary_images ??
-                doc.secondaryImages ??
-                [],
-
+            numberOfReviews: doc.numberofreviews ?? doc.numberOfReviews ?? 0,
+            checkInDate: doc.checkindate ?? doc.checkInDate ?? null,
+            checkOutDate: doc.checkoutdate ?? doc.checkOutDate ?? null,
+            image: doc.image ?? doc.imageurl ?? null,
+            secondaryImages: doc.secondary_images ?? doc.secondaryImages ?? [],
             longitude: doc.longitude,
             latitude: doc.latitude,
-
-            contactInfo:
-                doc.contact_info ??
-                doc.contactInfo ??
-                null,
-
-            amenities:
-                doc.amenities ?? [],
+            contactInfo: doc.contact_info ?? doc.contactInfo ?? null,
+            amenities: doc.amenities ?? [],
         });
     }
 
@@ -66,13 +30,7 @@ class ResidenceMapper {
             return [];
         }
 
-        return docs
-        .map(doc =>
-            ResidenceMapper.fromPersistence(
-            doc
-            )
-        )
-        .filter(Boolean);
+        return docs.map(doc => ResidenceMapper.fromPersistence(doc)).filter(Boolean);
     }
 
     static toPersistence(residence) {
@@ -84,33 +42,17 @@ class ResidenceMapper {
             name: residence.name,
             description: residence.description,
             address: residence.address,
-
             pricerange: residence.priceRange,
-
             rating: residence.rating,
-
-            numberofreviews:
-                residence.numberOfReviews,
-
-            checkindate:
-                residence.checkInDate,
-
-            checkoutdate:
-                residence.checkOutDate,
-
+            numberofreviews: residence.numberOfReviews,
+            checkindate: residence.checkInDate,
+            checkoutdate: residence.checkOutDate,
             image: residence.image,
-
-            secondary_images:
-                residence.secondaryImages,
-
+            secondary_images: residence.secondaryImages,
             longitude: residence.longitude,
             latitude: residence.latitude,
-
-            contact_info:
-                residence.contactInfo,
-
-            amenities:
-                residence.amenities,
+            contact_info: residence.contactInfo,
+            amenities: residence.amenities,
         };
     }
 }

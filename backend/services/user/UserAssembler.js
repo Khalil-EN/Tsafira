@@ -38,11 +38,7 @@ class UserAssembler {
     });
     }
 
-  static toLoginResponseDTO({
-    accessToken,
-    refreshToken,
-    user,
-  }) {
+  static toLoginResponseDTO({accessToken, refreshToken, user}) {
 
     return new LoginResponseDTO({
       accessToken,

@@ -22,9 +22,7 @@ class WeightedResidenceScorer extends ResidenceScorer {
         this.numberOfPeople = Number(numberOfPeople) || 1;
         this.minRating = Number(minRating) || 0;
 
-        this.preferredAmenities = Array.isArray(preferredAmenities)
-            ? preferredAmenities
-            : [];
+        this.preferredAmenities = Array.isArray(preferredAmenities) ? preferredAmenities : [];
 
         this.weight = {
             price: Number(weight.price) || 0,
@@ -39,24 +37,19 @@ class WeightedResidenceScorer extends ResidenceScorer {
             return -Infinity;
         }
 
-        const totalAccommodationCost =
-            this.getAccommodationCost(residence);
+        const totalAccommodationCost = this.getAccommodationCost(residence);
 
         if (totalAccommodationCost === null) {
             return -Infinity;
         }
 
-        const priceScore =
-            this._calculatePriceScore(totalAccommodationCost);
+        const priceScore = this._calculatePriceScore(totalAccommodationCost);
 
-        const ratingScore =
-            this._calculateRatingScore(residence);
+        const ratingScore = this._calculateRatingScore(residence);
 
-        const amenityScore =
-            this._calculateAmenityScore(residence);
+        const amenityScore = this._calculateAmenityScore(residence);
 
-        const reviewScore =
-            this._calculateReviewScore(residence);
+        const reviewScore = this._calculateReviewScore(residence);
 
         return (
             this.weight.price * priceScore +
@@ -71,10 +64,7 @@ class WeightedResidenceScorer extends ResidenceScorer {
             return null;
         }
 
-        const rooms =
-            RoomCapacityPolicy.getRequiredRooms(
-                this.numberOfPeople
-            );
+        const rooms = RoomCapacityPolicy.getRequiredRooms(this.numberOfPeople);
 
         if (rooms <= 0) {
             return null;
@@ -86,10 +76,7 @@ class WeightedResidenceScorer extends ResidenceScorer {
             return null;
         }
 
-        return residence.getEstimatedAccommodationCost({
-            nights,
-            rooms,
-        });
+        return residence.getEstimatedAccommodationCost({nights, rooms});
     }
 
     selectBest(residencies) {
@@ -130,13 +117,9 @@ class WeightedResidenceScorer extends ResidenceScorer {
             return 1 - (cost / this.maxBudget) * 0.5;
         }
 
-        const overBudgetRatio =
-            (cost - this.maxBudget) / this.maxBudget;
+        const overBudgetRatio = (cost - this.maxBudget) / this.maxBudget;
 
-        return Math.max(
-            0,
-            0.5 - overBudgetRatio
-        );
+        return Math.max(0, 0.5 - overBudgetRatio);
     }
 
     _calculateRatingScore(residence) {
@@ -146,12 +129,9 @@ class WeightedResidenceScorer extends ResidenceScorer {
             return 0;
         }
 
-        const ratingRange =
-            Math.max(5 - this.minRating, 1);
+        const ratingRange = Math.max(5 - this.minRating, 1);
 
-        return Math.min(
-            1,
-            (rating - this.minRating) / ratingRange
+        return Math.min(1, (rating - this.minRating) / ratingRange
         );
     }
 
@@ -161,24 +141,15 @@ class WeightedResidenceScorer extends ResidenceScorer {
         }
 
         const matchingAmenities =
-            this.preferredAmenities.filter(
-                amenity => residence.hasAmenity(amenity)
-            ).length;
+            this.preferredAmenities.filter(amenity => residence.hasAmenity(amenity)).length;
 
-        return (
-            matchingAmenities /
-            this.preferredAmenities.length
-        );
+        return (matchingAmenities / this.preferredAmenities.length);
     }
 
     _calculateReviewScore(residence) {
-        const numberOfReviews =
-            Number(residence.numberOfReviews) || 0;
+        const numberOfReviews = Number(residence.numberOfReviews) || 0;
 
-        return (
-            Math.log1p(numberOfReviews) /
-            Math.log1p(1000)
-        );
+        return (Math.log1p(numberOfReviews) / Math.log1p(1000));
     }
 }
 

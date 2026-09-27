@@ -2,7 +2,6 @@ import '../../api_response.dart';
 import '../../http_client.dart';
 
 class FriendService {
-  /// Send a friend request to another user.
   static Future<void> sendFriendRequest(
       String targetUserId,
       ) async {
@@ -15,7 +14,6 @@ class FriendService {
     );
   }
 
-  /// Get the current user's accepted friends.
   static Future<List<Map<String, dynamic>>> getAll() async {
     final response = await HttpClient.request(
       method: HttpMethod.get,

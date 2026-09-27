@@ -2,10 +2,6 @@ const Conversation = require("../schemas/conversationSchema");
 
 const ConversationDAO = {
 
-  // ─────────────────────────────────────────────────────────────
-  // Inbox
-  // ─────────────────────────────────────────────────────────────
-
   async getUserConversations(
     userId,
     page = 1,
@@ -30,10 +26,6 @@ const ConversationDAO = {
       .lean();
   },
 
-  // ─────────────────────────────────────────────────────────────
-  // Conversation lookup
-  // ─────────────────────────────────────────────────────────────
-
   async getById(conversationId) {
     return await Conversation.findById(
       conversationId
@@ -54,10 +46,6 @@ const ConversationDAO = {
     });
   },
 
-  // ─────────────────────────────────────────────────────────────
-  // Security
-  // ─────────────────────────────────────────────────────────────
-
   async isParticipant(
     conversationId,
     userId
@@ -70,10 +58,6 @@ const ConversationDAO = {
 
     return !!conversation;
   },
-
-  // ─────────────────────────────────────────────────────────────
-  // Last message
-  // ─────────────────────────────────────────────────────────────
 
   async updateLastMessage(
     conversationId,
@@ -88,11 +72,6 @@ const ConversationDAO = {
         lastMessage: content,
         lastMessageAt: new Date(),
         lastMessageSender: senderId,
-
-        /*
-         * The sender has obviously read their own message.
-         * Nobody else has read it yet.
-         */
         lastMessageReadBy: [senderId],
       },
       {
@@ -100,10 +79,6 @@ const ConversationDAO = {
       }
     );
   },
-
-  // ─────────────────────────────────────────────────────────────
-  // Mark conversation as read
-  // ─────────────────────────────────────────────────────────────
 
   async markAsRead(
     conversationId,
@@ -125,10 +100,6 @@ const ConversationDAO = {
     );
   },
 
-  // ─────────────────────────────────────────────────────────────
-  // Unread check
-  // ─────────────────────────────────────────────────────────────
-
   async isUnreadForUser(
     conversationId,
     userId
@@ -137,18 +108,9 @@ const ConversationDAO = {
       await Conversation.findOne({
         _id: conversationId,
         participants: userId,
-
-        /*
-         * Latest message must have been sent by
-         * somebody other than the current user.
-         */
         lastMessageSender: {
           $ne: userId,
         },
-
-        /*
-         * Current user must not have read it.
-         */
         lastMessageReadBy: {
           $ne: userId,
         },
@@ -156,10 +118,6 @@ const ConversationDAO = {
 
     return !!conversation;
   },
-
-  // ─────────────────────────────────────────────────────────────
-  // Direct conversations
-  // ─────────────────────────────────────────────────────────────
 
   async findDirectConversation(
     userId1,
@@ -185,10 +143,6 @@ const ConversationDAO = {
       )
       .lean();
   },
-
-  // ─────────────────────────────────────────────────────────────
-  // Creation
-  // ─────────────────────────────────────────────────────────────
 
   async createConversation(data) {
     const conversation =

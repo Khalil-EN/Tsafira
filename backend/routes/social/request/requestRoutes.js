@@ -2,14 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
-const asyncHandler =
-    require("../../../middlewares/asyncHandler");
+const asyncHandler = require("../../../middlewares/asyncHandler");
 
-const socialAuth =
-    require("../socialAuth");
+const socialAuth = require("../socialAuth");
 
-const RequestController =
-    require("./requestController");
+const RequestController = require("./requestController");
 
 const {
     validateRequestId,
@@ -17,7 +14,6 @@ const {
 
 router.use(socialAuth);
 
-// GET /requests
 router.get(
     "/",
     asyncHandler(
@@ -25,7 +21,6 @@ router.get(
     )
 );
 
-// POST /requests/:id/accept
 router.post(
     "/:id/accept",
     validateRequestId,
@@ -34,7 +29,6 @@ router.post(
     )
 );
 
-// POST /requests/:id/reject
 router.post(
     "/:id/reject",
     validateRequestId,

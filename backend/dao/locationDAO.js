@@ -13,7 +13,7 @@ const LocationDAO = {
     const values = [];
 
     LocationSchema.columns.forEach((col, i) => {
-      if (col === 'id' || col === 'created_at') return; // skip auto-generated columns
+      if (col === 'id' || col === 'created_at') return; 
       if (insertData[col] !== undefined) {
         fields.push(col);
         values.push(insertData[col]);
@@ -70,7 +70,6 @@ const LocationDAO = {
   },
 
   async getAll(filters = {}) {
-    // Simple filterless fetch
     const result = await db.query(
       `SELECT * FROM ${LocationSchema.table}`
     );

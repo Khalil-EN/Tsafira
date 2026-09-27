@@ -42,8 +42,6 @@ const userSchema = new mongoose.Schema({
         select: false,
     },
 
-    // Avatar selected from the application's built-in avatars.
-    // Example: "avatar_01", "avatar_02", etc.
     profilePicture: {
         type: String,
         default: "avatar_01",

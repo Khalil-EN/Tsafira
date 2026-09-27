@@ -1,20 +1,15 @@
-const ConversationDAO =
-  require("../../dao/conversationDAO");
+// TODO : This service must be refactored
+const ConversationDAO = require("../../dao/conversationDAO");
 
-const MessageDAO =
-  require("../../dao/messageDAO");
+const MessageDAO = require("../../dao/messageDAO");
 
-const ChatAssembler =
-  require("../chat/ChatAssembler");
+const ChatAssembler = require("../chat/ChatAssembler");
 
-const RAGService =
-  require("./RAGService");
+const RAGService = require("./RAGService");
 
-const OllamaService =
-  require("./OllamaService");
+const OllamaService = require("./OllamaService");
 
-const AIRelevanceService =
-  require("./AIRelevanceService");
+const AIRelevanceService = require("./AIRelevanceService");
 
 
 const SYSTEM_PROMPT = `
@@ -99,346 +94,87 @@ const OUT_OF_SCOPE_MESSAGE =
 
 const AIService = {
 
-  async getOrCreateConversation(
-    userId
-  ) {
+  async getOrCreateConversation(userId) {
 
-    const existing =
-      await ConversationDAO
-        .findAIConversation(
-          userId
-        );
-
-
+    const existing = await ConversationDAO.findAIConversation(userId);
     if (existing) {
 
-      return ChatAssembler
-        .toConversationDTO(
-          existing,
-          userId
-        );
+      return ChatAssembler.toConversationDTO(existing, userId);
     }
 
+    const conversation = await ConversationDAO.createConversation({type: "ai", participants: [userId]});
 
-    const conversation =
-      await ConversationDAO
-        .createConversation({
-
-          type: "ai",
-
-          participants: [
-            userId,
-          ],
-
-        });
-
-
-    return ChatAssembler
-      .toConversationDTO(
-        conversation,
-        userId
-      );
+    return ChatAssembler.toConversationDTO(conversation, userId);
   },
 
+  async sendMessage(userId, conversationId, content) {
 
-  async sendMessage(
-    userId,
-    conversationId,
-    content
-  ) {
-
-    // ==========================================================
-    // 1. Validate message
-    // ==========================================================
-
-    if (
-      !content ||
-      !content.trim()
-    ) {
-
+    if (!content || !content.trim()) {
       throw new Error(
         "Message content cannot be empty."
       );
     }
 
-
-    // ==========================================================
-    // 2. Validate AI conversation
-    // ==========================================================
-
-    const isAIConversation =
-      await ConversationDAO
-        .isAIConversation(
-          conversationId,
-          userId
-        );
+    const isAIConversation = await ConversationDAO.isAIConversation(conversationId, userId);
 
 
     if (!isAIConversation) {
-
-      throw new Error(
-        "Invalid AI conversation."
-      );
+      throw new Error("Invalid AI conversation.");
     }
+    const cleanContent = content.trim();
 
-
-    const cleanContent =
-      content.trim();
-
-
-    // ==========================================================
-    // 3. Save user message
-    // ==========================================================
-
-    const userMessage =
-      await MessageDAO.createMessage({
-
-        conversation:
-          conversationId,
-
-        sender:
-          userId,
-
-        senderType:
-          "user",
-
-        content:
-          cleanContent,
-
+    const userMessage =await MessageDAO.createMessage({conversation:conversationId, sender: userId,
+                                                      senderType: "user", content: cleanContent,
       });
 
+    const relevance = await AIRelevanceService.classify(cleanContent);
+    console.log(`[AI] Message classified as: ${relevance}`);
 
-    // ==========================================================
-    // 4. CLASSIFY USER INTENT
-    // ==========================================================
+    if (relevance === "UNRELATED") {
 
-    const relevance =
-      await AIRelevanceService
-        .classify(
-          cleanContent
-        );
-
-
-    console.log(
-      `[AI] Message classified as: ${relevance}`
-    );
-
-
-    // ==========================================================
-    // 5. Reject unrelated messages
-    // ==========================================================
-
-    if (
-      relevance === "UNRELATED"
-    ) {
-
-      const aiMessage =
-        await MessageDAO.createMessage({
-
-          conversation:
-            conversationId,
-
-          sender:
-            null,
-
-          senderType:
-            "ai",
-
-          content:
-            OUT_OF_SCOPE_MESSAGE,
-
+      const aiMessage = await MessageDAO.createMessage({conversation: conversationId, sender: null,
+                                                        senderType: "ai", content: OUT_OF_SCOPE_MESSAGE,
         });
 
-
-      await ConversationDAO
-        .updateLastMessage(
-          conversationId,
-          {
-            content:
-              OUT_OF_SCOPE_MESSAGE,
-
-            senderId:
-              null,
-          }
+      await ConversationDAO.updateLastMessage(conversationId,{content: OUT_OF_SCOPE_MESSAGE, senderId: null,}
         );
-
-
-      await ConversationDAO
-        .markAsRead(
-          conversationId,
-          userId
-        );
-
+      await ConversationDAO.markAsRead(conversationId, userId);
 
       return {
-
-        userMessage:
-          ChatAssembler
-            .toMessageDTO(
-              userMessage
-            ),
-
-        aiMessage:
-          ChatAssembler
-            .toMessageDTO(
-              aiMessage
-            ),
-
+        userMessage: ChatAssembler.toMessageDTO(userMessage),
+        aiMessage: ChatAssembler.toMessageDTO(aiMessage),
       };
     }
 
-
-    // ==========================================================
-    // 6. Retrieve recent history
-    // ==========================================================
-
-    const history =
-      await MessageDAO
-        .getRecentMessages(
-          conversationId,
-          20
-        );
-
-
-    const messages =
-      history
-        .map(message => {
-
-          const role =
-            message.senderType === "ai"
-              ? "assistant"
-              : "user";
-
-
-          return {
-
-            role,
-
-            content:
-              message.content,
-
-          };
+    const history = await MessageDAO.getRecentMessages(conversationId,20);
+    const messages = history.map(message => {const role = message.senderType === "ai" ? "assistant" : "user";
+                                            return {role, content: message.content,};
         });
 
 
-    // ==========================================================
-    // 7. Retrieve RAG context
-    // ==========================================================
+    const context = await RAGService.buildContext(cleanContent, 5);
 
-    const context =
-      await RAGService
-        .buildContext(
-          cleanContent,
-          5
-        );
+    const system = SYSTEM_PROMPT.replace("{{CONTEXT}}", context || "No relevant knowledge was found.");
 
-
-    // ==========================================================
-    // 8. Build system prompt
-    // ==========================================================
-
-    const system =
-      SYSTEM_PROMPT.replace(
-        "{{CONTEXT}}",
-
-        context ||
-          "No relevant knowledge was found."
-      );
-
-
-    // ==========================================================
-    // 9. Generate final answer
-    // ==========================================================
-
-    const aiContent =
-      await OllamaService.chat({
-
-        model:
-          process.env.OLLAMA_CHAT_MODEL,
-
-        system,
-
-        messages,
-
-      });
-
-
+    const aiContent = await OllamaService.chat({model: process.env.OLLAMA_CHAT_MODEL, system, messages});
     if (!aiContent) {
-
       throw new Error(
         "AI returned an empty response."
       );
     }
 
+    const aiMessage = await MessageDAO.createMessage({conversation: conversationId, sender: null,
+                                                      senderType: "ai", content: aiContent});
 
-    // ==========================================================
-    // 10. Save AI message
-    // ==========================================================
-
-    const aiMessage =
-      await MessageDAO.createMessage({
-
-        conversation:
-          conversationId,
-
-        sender:
-          null,
-
-        senderType:
-          "ai",
-
-        content:
-          aiContent,
-
-      });
-
-
-    // ==========================================================
-    // 11. Update conversation
-    // ==========================================================
-
-    await ConversationDAO
-      .updateLastMessage(
-        conversationId,
-        {
-          content:
-            aiContent,
-
-          senderId:
-            null,
-        }
-      );
-
-
-    await ConversationDAO
-      .markAsRead(
-        conversationId,
-        userId
-      );
-
-
-    // ==========================================================
-    // 12. Return result
-    // ==========================================================
+    await ConversationDAO.updateLastMessage(conversationId,{content: aiContent, senderId: null});
+    await ConversationDAO.markAsRead(conversationId, userId);
 
     return {
-
-      userMessage:
-        ChatAssembler
-          .toMessageDTO(
-            userMessage
-          ),
-
-      aiMessage:
-        ChatAssembler
-          .toMessageDTO(
-            aiMessage
-          ),
-
+      userMessage: ChatAssembler.toMessageDTO(userMessage),
+      aiMessage: ChatAssembler.toMessageDTO(aiMessage),
     };
   },
 };
 
 
-module.exports =
-  AIService;
+module.exports = AIService;
