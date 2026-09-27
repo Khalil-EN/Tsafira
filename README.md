@@ -8,15 +8,36 @@ The project consists of a **Flutter mobile application**, a **Node.js backend**,
 
 ## Development Approach
 
-Both the frontend and backend have been developed while following **good software development practices and principles as much as possible**, with particular attention to code organization, separation of responsibilities, maintainability, and reusability.
+Both the frontend and backend have been developed while progressively applying good software development practices and principles, with particular attention to code organization, separation of responsibilities, maintainability, and reusability.
 
-The project takes inspiration from **SOLID principles** as well as other good development practices, including the **DRY (Don't Repeat Yourself)** principle and appropriate separation of concerns.
+An important aspect of this project is that **Tsafira was started before I had formally learned SOLID+T principles, design patterns, and software architecture**. Consequently, some parts of the codebase reflect earlier design decisions and may not follow the architectural principles that I would apply if starting the project today.
 
-The backend follows a **multi-layer architecture** that separates the different responsibilities of the application. Depending on the feature, responsibilities are distributed between layers such as routes/controllers, services/business logic, data-access components, models, and the system-management layer. This structure helps keep the business logic independent from the API and data-access details and makes the application easier to maintain and extend.
+Rather than treating this as a fixed codebase, I am using Tsafira as an evolving project where **software engineering knowledge is applied progressively**. As I learn new concepts, I revisit existing implementations and refactor them while continuing to add new functionality.
 
-The Flutter frontend also follows a structured architecture separating UI components, screens, providers/state management, models, and API services. This separation helps prevent application logic from being tightly coupled to the user interface.
+The project therefore evolves along two parallel paths:
 
-These principles have been applied **as much as reasonably possible within the scope and development time of the project**. Some parts of the application may still be improved or refactored as the project evolves.
+```text
+        New functionality
+               │
+               ▼
+        ┌──────────────┐
+        │    Tsafira   │
+        └──────────────┘
+               ▲
+               │
+        Refactoring /
+        architectural
+        improvements
+```
+
+The backend increasingly takes inspiration from **SOLID+T principles**, design patterns, separation of concerns, and layered architecture. Depending on the feature, responsibilities are distributed between routes/controllers, services/business logic, data-access components, models, and the system-management layer.
+
+The Flutter frontend also follows a structured architecture separating UI components, screens, providers/state management, models, and API services.
+
+This means that **some inconsistencies and legacy design decisions are still present in the codebase**. They are progressively being identified and refactored as the project grows and as new architectural concepts are applied.
+
+This approach also makes Tsafira a practical record of my progression in software engineering: the project is not only being used to build a travel application, but also to experiment with and apply the architectural and design principles I learn over time.
+
 
 ## Testing
 
