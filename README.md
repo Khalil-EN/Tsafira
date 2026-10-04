@@ -126,7 +126,7 @@ The application also includes an **AI assistant** capable of answering questions
 
 ## Authentication and User Management
 
-Tsafira provides user account management and authentication.
+Tsafira provides user account management and token-based authentication using **access and refresh tokens**.
 
 Users can:
 
@@ -139,7 +139,8 @@ Users can:
 * Log out
 * Delete their account
 
-The backend associates authenticated requests with the current user so that operations such as posts, communities, friend requests, conversations, and recommendations can be performed in the correct user context.
+Authentication is handled using short-lived access tokens and refresh tokens to maintain authenticated sessions securely. The backend associates authenticated requests with the current user so that operations such as posts, communities, friend requests, conversations, and recommendations can be performed in the correct user context.
+
 
 ---
 
@@ -343,7 +344,6 @@ The application provides notification information for events such as:
 
 * Friend requests
 * Messages
-* Other user interactions
 
 The Flutter application retrieves pending requests and unread conversations to calculate notification information displayed to the user.
 
