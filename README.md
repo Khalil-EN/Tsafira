@@ -836,17 +836,15 @@ A simplified project organization is:
 Tsafira/
 │
 ├── frontend/
-│   └── tsafira-flutter-app/
-│       │
-│       ├── lib/
-│       │   ├── models/
-│       │   ├── providers/
-│       │   ├── screens/
-│       │   ├── services/
-│       │   ├── widgets/
-│       │   └── ...
-│       │
+│   └──lib/
+│       ├── models/
+│       ├── providers/
+│       ├── screens/
+│       ├── services/
+│       ├── widgets/
 │       └── ...
+│       │
+│   └── ...
 │
 ├── backend/
 │   │
